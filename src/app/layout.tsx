@@ -1,3 +1,4 @@
+'use client'
 import * as React from 'react';
 import Link from 'next/link';
 import AppBar from '@mui/material/AppBar';
@@ -11,15 +12,16 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import HomeIcon from '@mui/icons-material/Home';
-import StarIcon from '@mui/icons-material/Star';
-import ChecklistIcon from '@mui/icons-material/Checklist';
-import SettingsIcon from '@mui/icons-material/Settings';
-import SupportIcon from '@mui/icons-material/Support';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
+import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
+import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
+import Loading from './components/Loading';
 import ThemeRegistry from '@/app/components/ThemeRegistry/ThemeRegistry';
-
+import { ToastContainer } from 'react-toastify';
+import './styles/globals.css'
 export const metadata = {
   title: 'Chinese Chess',
   description: 'Chinese Chess: Next.js App Router + Material UI v5',
@@ -28,31 +30,43 @@ export const metadata = {
 const DRAWER_WIDTH = 240;
 
 const LINKS = [
-  { text: 'Home', href: '/', icon: HomeIcon },
-  { text: 'Starred', href: '/starred', icon: StarIcon },
-  { text: 'Tasks', href: '/tasks', icon: ChecklistIcon },
+  { text: 'Home', href: '/', icon: HomeRoundedIcon },
+  { text: 'List Room', href: '/rooms', icon: MeetingRoomRoundedIcon },
+  { text: 'Login', href: '/auth/login', icon: LoginRoundedIcon },
+  { text: 'Register', href: '/auth/register', icon: PersonAddAltRoundedIcon },
 ];
 
 const PLACEHOLDER_LINKS = [
-  { text: 'Settings', icon: SettingsIcon },
-  { text: 'Support', icon: SupportIcon },
   { text: 'Logout', icon: LogoutIcon },
 ];
 
+
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    // Simulate loading by adding a delay (you can replace this with actual loading logic)
+    setTimeout(() => {
+      setLoading(false); // Set loading to false when the app has finished loading
+    }, 2000); // Adjust the delay as needed
+  }, []);
+
   return (
     <html lang="en">
       <head>
       <link rel="icon" href="/images/favicon.ico" />
       </head>
-      <body>
+      
+        <body>        
         <ThemeRegistry>
-          <AppBar position="fixed" sx={{ zIndex: 2000 }}>
+          <AppBar color='primary' position="fixed" sx={{ zIndex: 2000 }}>
             <Toolbar sx={{ backgroundColor: 'background.paper' }}>
-              <DashboardIcon sx={{ color: '#444', mr: 2, transform: 'translateY(-2px)' }} />
-              <Typography variant="h6" noWrap component="div" color="black">
-              Chinese Chess
+              <SportsEsportsIcon sx={{ color: '#444', mr: 2, fontSize:35}} />
+              <Typography variant="h6" fontSize={20} noWrap component="div" color="black">
+              CHINESE CHESS
               </Typography>
+             
             </Toolbar>
           </AppBar>
           <Drawer
@@ -75,10 +89,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {LINKS.map(({ text, href, icon: Icon }) => (
                 <ListItem key={href} disablePadding>
                   <ListItemButton component={Link} href={href}>
-                    <ListItemIcon>
+                  <ListItemIcon>
                       <Icon />
                     </ListItemIcon>
                     <ListItemText primary={text} />
+                    
                   </ListItemButton>
                 </ListItem>
               ))}
@@ -96,6 +111,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 </ListItem>
               ))}
             </List>
+            
           </Drawer>
           <Box
             component="main"
@@ -107,9 +123,31 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               p: 3,
             }}
           >
-            {children}
+            {loading ? (
+        // Display loading component while loading is true
+        <Loading />
+      ) : (
+        // Display the actual application content when loading is false
+        children
+      )}
+           
           </Box>
         </ThemeRegistry>
+        <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        />
+        {/* Same as */}
+        <ToastContainer />
+        
       </body>
     </html>
   );
