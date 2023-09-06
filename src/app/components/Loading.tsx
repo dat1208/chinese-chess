@@ -6,9 +6,11 @@ import loadingAnimation from "../json/loadingAnimation.json";
 
 const Loading: React.FC = () => {
   return (
-    <div style={{width: 100}} className="loading ml-5">
-      {/* You can add loading animations or a loading message here */}
-      <Lottie loop={true} animationData={loadingAnimation} />
+    <div className="flex min-h-full flex-1 flex-col justify-center">
+      <div style={{width: 300}} className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <Lottie loop={true} animationData={loadingAnimation} />
+      </div>
+      
     </div>
   );
 };

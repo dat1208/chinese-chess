@@ -20,6 +20,7 @@ import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import PersonAddAltRoundedIcon from '@mui/icons-material/PersonAddAltRounded';
 import Loading from './components/Loading';
 import ThemeRegistry from '@/app/components/ThemeRegistry/ThemeRegistry';
+import Sidebar from './components/Sidebar';
 import { ToastContainer } from 'react-toastify';
 import './styles/globals.css'
 export const metadata = {
@@ -60,57 +61,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       
         <body>        
         <ThemeRegistry>
-          <AppBar color='primary' position="fixed" sx={{ zIndex: 2000 }}>
-            <Toolbar sx={{ backgroundColor: 'background.paper' }}>
-              <SportsEsportsIcon sx={{ color: '#444', mr: 2, fontSize:35}} />
-              <Typography variant="h6" fontSize={20} noWrap component="div" color="black">
-              CHINESE CHESS
-              </Typography>
-             
-            </Toolbar>
-          </AppBar>
           <Drawer
-            sx={{
-              width: DRAWER_WIDTH,
-              flexShrink: 0,
-              '& .MuiDrawer-paper': {
-                width: DRAWER_WIDTH,
-                boxSizing: 'border-box',
-                top: ['48px', '56px', '64px'],
-                height: 'auto',
-                bottom: 0,
-              },
-            }}
             variant="permanent"
             anchor="left"
           >
-            <Divider />
-            <List>
-              {LINKS.map(({ text, href, icon: Icon }) => (
-                <ListItem key={href} disablePadding>
-                  <ListItemButton component={Link} href={href}>
-                  <ListItemIcon>
-                      <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                    
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
-            <Divider sx={{ mt: 'auto' }} />
-            <List>
-              {PLACEHOLDER_LINKS.map(({ text, icon: Icon }) => (
-                <ListItem key={text} disablePadding>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <Icon />
-                    </ListItemIcon>
-                    <ListItemText primary={text} />
-                  </ListItemButton>
-                </ListItem>
-              ))}
-            </List>
+            <Sidebar></Sidebar>
             
           </Drawer>
           <Box
@@ -145,7 +100,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         pauseOnHover
         theme="light"
         />
-        {/* Same as */}
         <ToastContainer />
         
       </body>

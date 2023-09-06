@@ -17,26 +17,23 @@ const JoinRoomForm: React.FC = () => {
 
   return (
     <div className="p-4 space-y-4">
-        
-      <h1 className="text-2xl font-semibold">Join Room</h1>
-      <div className="flex space-x-4">
-        <input
-          type="text"
-          className="w-full p-2 border rounded-md"
-          placeholder="Enter Room Code"
-          value={roomCode}
-          onChange={(e) => setRoomCode(e.target.value)}
-        />
-        <button
-          className="bg-green-500 hover:bg-green-700 text-white uppercase text-sm font-semibold px-4 py-2 rounded"
-          onClick={handleJoinRoom}
-        >
-          Join
-        </button>
-      
-      </div>
-      
+    <h1 className="text-2xl font-semibold">Join Room</h1>
+    <div className="flex space-x-4">
+      <input
+        type="text"
+        className="w-full p-2 border rounded-md"
+        placeholder="Enter Room Code"
+        value={roomCode}
+        onChange={(e) => setRoomCode(e.target.value)}
+      />
+      <button
+        className="rounded bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        onClick={handleJoinRoom}
+      >
+        Join
+      </button>
     </div>
+  </div>
   );
 };
 
