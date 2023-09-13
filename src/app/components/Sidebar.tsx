@@ -30,6 +30,10 @@ function Sidebar() {
         <VpnKeyRoundedIcon></VpnKeyRoundedIcon>
         <span className="ml-2 text-sm font-medium">Register</span>
       </a>
+      <a className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-indigo-600" href="/game">
+    
+        <span className="ml-2 text-sm font-medium">Cờ Cờ</span>
+      </a>
       
       {/* Repeat the above structure for other menu items */}
     </div>
