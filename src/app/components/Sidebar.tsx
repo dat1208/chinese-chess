@@ -5,6 +5,7 @@ import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import VpnKeyRoundedIcon from '@mui/icons-material/VpnKeyRounded';
 import SportsEsportsRoundedIcon from '@mui/icons-material/SportsEsportsRounded';
+import Person from '@mui/icons-material/Person';
 function Sidebar() {
   return (
     <div className="flex flex-col items-center w-44 h-full overflow-hidden text-gray-100 bg-indigo-800">
@@ -33,6 +34,10 @@ function Sidebar() {
       <a className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-indigo-600" href="/game">
     
         <span className="ml-2 text-sm font-medium">Cờ Cờ</span>
+      </a>
+      <a className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-indigo-600" href="/auth/profile">
+        <Person></Person>
+        <span className="ml-2 text-sm font-medium">Profile</span>
       </a>
       
       {/* Repeat the above structure for other menu items */}
