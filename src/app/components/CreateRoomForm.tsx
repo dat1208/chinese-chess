@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-import { notify } from '../scripts/notification';
+import { notify } from '../../scripts/notification';
 const CreateRoomForm: React.FC = () => {
   const [roomCode, setRoomCode] = useState('');
   const generateRoomCode = () => {

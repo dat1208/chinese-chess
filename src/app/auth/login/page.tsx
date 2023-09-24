@@ -1,6 +1,54 @@
+'use client'
 import * as React from 'react';
-import { Button } from '@mui/material';
+import { ApiUserResponse } from '@/interfaces/userInterface';
+import { notify } from '../../../scripts/notification';
+import { setTokens, getTokens, setUser } from '@/scripts/storage';
+import { Tokens } from '@/interfaces/tokenInterface';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const [formData, setFormData] = React.useState({ username: '', password: '' });
+  const tokens: Tokens = {
+    accessToken: '',
+    refreshToken: '',
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:3201/api/v1/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data : ApiUserResponse = await response.json() as ApiUserResponse;
+        
+        
+        if(data.status.toLowerCase() === "success") {
+          tokens.accessToken = data.data.accessToken;
+          tokens.refreshToken = data.data.refreshToken;
+          setTokens(tokens);
+          setUser(data.data.userResult);
+          notify('Hi👋 '+data.data.userResult.fullname , "success");
+          setTimeout(function() {
+            window.location.replace('/auth/profile');
+          }, 3000);
+                 
+        }
+      } else {
+        notify('Login failed, try again!', "error");
+      }
+    } catch (error) {
+      notify('Login failed, try again!', "error");
+    }
+  };
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -12,18 +60,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6" action="#" method="POST">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                Email address
+              <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
+                Username
               </label>
               <div className="mt-2">
                 <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
+                  id="username"
+                  name="username"
+                  type="text"
+                  autoComplete="username"
                   required
+                  value={formData.username}
+                  onChange={handleChange}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
@@ -43,6 +93,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <div className="mt-2">
                 <input
                   id="password"
+                  value={formData.password}
+                  onChange={handleChange}
                   name="password"
                   type="password"
                   autoComplete="current-password"

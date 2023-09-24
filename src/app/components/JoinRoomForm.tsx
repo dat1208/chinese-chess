@@ -1,7 +1,6 @@
 'use client'
 import React, { useState } from 'react';
-import 'react-toastify/dist/ReactToastify.css';
-import { notify } from '../scripts/notification';
+import { notify } from '../../scripts/notification';
 
 const JoinRoomForm: React.FC = () => {
   const [roomCode, setRoomCode] = useState('');
@@ -9,10 +8,10 @@ const JoinRoomForm: React.FC = () => {
   const handleJoinRoom = async () => {
     // Add your logic for joining the room here
     if(roomCode === undefined || roomCode === "") {
-        await notify("Please enter a room code", "error");
+        notify("Please enter a room code", "error");
     }
     else
-        await notify(roomCode, "success");
+        notify(roomCode, "success");
   };
 
   return (

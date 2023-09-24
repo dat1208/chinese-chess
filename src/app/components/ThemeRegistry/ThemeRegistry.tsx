@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import NextAppDirEmotionCacheProvider from './EmotionCache';
 import theme from './theme';
 import Loading from '../Loading';
+import { ToastContainer } from 'react-toastify';
 
 export default function ThemeRegistry({ children }: { children: React.ReactNode }) {
   return (
@@ -14,6 +15,19 @@ export default function ThemeRegistry({ children }: { children: React.ReactNode 
         <CssBaseline />
         {children}
       </ThemeProvider>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        />
+        <ToastContainer />
     </NextAppDirEmotionCacheProvider>
   );
 }

@@ -1,5 +1,5 @@
 /* @license
- * xiangqiboard.js v0.3.3
+ * xiangqiboard.js v@VERSION
  * https://github.com/lengyanyu258/xiangqiboardjs/
  *
  * Copyright (c) 2017, Chris Oakman
@@ -25,6 +25,7 @@
   const DEFAULT_DRAG_THROTTLE_RATE = 20
   const ELLIPSIS = '...'
   const MINIMUM_JQUERY_VERSION = '1.8.3'
+  const RUN_ASSERTS = true
   const START_FEN = 'rnbakabnr/9/1c5c1/p1p1p1p1p/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR'
   const START_POSITION = fenToObj(START_FEN)
 
@@ -144,6 +145,15 @@
     return str
   }
 
+  if (RUN_ASSERTS) {
+    console.assert(interpolateTemplate('abc', {a: 'x'}) === 'abc')
+    console.assert(interpolateTemplate('{a}bc', {}) === '{a}bc')
+    console.assert(interpolateTemplate('{a}bc', {p: 'q'}) === '{a}bc')
+    console.assert(interpolateTemplate('{a}bc', {a: 'x'}) === 'xbc')
+    console.assert(interpolateTemplate('{a}bc{a}bc', {a: 'x'}) === 'xbcxbc')
+    console.assert(interpolateTemplate('{a}{a}{b}', {a: 'x', b: 'y'}) === 'xxy')
+  }
+
   // ---------------------------------------------------------------------------
   // Predicates
   // ---------------------------------------------------------------------------
@@ -188,6 +198,17 @@
     return isString(square) && square.search(/^[a-i][0-9]$/) !== -1
   }
 
+  if (RUN_ASSERTS) {
+    console.assert(validSquare('a1'))
+    console.assert(validSquare('e2'))
+    console.assert(validSquare('g9'))
+    console.assert(!validSquare('D2'))
+    console.assert(!validSquare('a'))
+    console.assert(!validSquare(true))
+    console.assert(!validSquare(null))
+    console.assert(!validSquare({}))
+  }
+
   function validPieceCode (code) {
     // TODO: Compatible with other representations:
     // r and w both represent the red side
@@ -195,6 +216,19 @@
     // Bishop, Elephant and Minister are equal,
     // Horse and Knight represent the same
     return isString(code) && code.search(/^[br][KABNRCP]$/) !== -1
+  }
+
+  if (RUN_ASSERTS) {
+    console.assert(validPieceCode('bP'))
+    console.assert(validPieceCode('bK'))
+    console.assert(validPieceCode('rK'))
+    console.assert(validPieceCode('rR'))
+    console.assert(!validPieceCode('RR'))
+    console.assert(!validPieceCode('Rr'))
+    console.assert(!validPieceCode('a'))
+    console.assert(!validPieceCode(true))
+    console.assert(!validPieceCode(null))
+    console.assert(!validPieceCode({}))
   }
 
   function validFen (fen) {
@@ -222,6 +256,20 @@
     return true
   }
 
+  if (RUN_ASSERTS) {
+    console.assert(validFen(START_FEN))
+    console.assert(validFen('9/9/9/9/9/9/9/9/9/9'))
+    console.assert(validFen('r1bakab1r/9/1cn2cn2/p1p1p1p1p/9/9/P1P1P1P1P/1C2C1N2/9/RNBAKABR1'))
+    console.assert(validFen('rnbakabnr/9/1c2c4/p1p1C1p1p/9/9/P1P1P1P1P/1C7/9/RNBAKABNR b - - 0 2'))
+    console.assert(!validFen('rnbakabnz/9/1c2c4/p1p1C1p1p/9/9/P1P1P1P1P/1C7/9/RNBAKABNR b - - 0 2'))
+    console.assert(!validFen('anbrkqbnr/9/9/9/9/9/P1P1P1P1P/9/9/9'))
+    console.assert(!validFen('rnbakabnr/p1p1p1p1p/9/9/9/9/P1P1P1P1P/'))
+    console.assert(!validFen('rnbakabnr/p1p1p1p1p/9/9/9/9/P1P1P1P1P/RNBAKABN'))
+    console.assert(!validFen('999999/p1p1p1p1p/9/9/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR'))
+    console.assert(!validFen('rnbakabnr/p1p1p1p1p/74/9/9/9/P1P1P1P1P/1C5C1/9/RNBAKABNR'))
+    console.assert(!validFen({}))
+  }
+
   function validPositionObject (pos) {
     if (!$.isPlainObject(pos)) return false
 
@@ -234,6 +282,18 @@
     }
 
     return true
+  }
+
+  if (RUN_ASSERTS) {
+    console.assert(validPositionObject(START_POSITION))
+    console.assert(validPositionObject({}))
+    console.assert(validPositionObject({e2: 'rP'}))
+    console.assert(validPositionObject({e2: 'rP', d2: 'rP'}))
+    console.assert(!validPositionObject({e2: 'BP'}))
+    console.assert(!validPositionObject({y2: 'rP'}))
+    console.assert(!validPositionObject(null))
+    console.assert(!validPositionObject('start'))
+    console.assert(!validPositionObject(START_FEN))
   }
 
   function isTouchDevice () {
@@ -344,6 +404,12 @@
     fen = squeezeFenEmptySquares(fen)
 
     return fen
+  }
+
+  if (RUN_ASSERTS) {
+    console.assert(objToFen(START_POSITION) === START_FEN)
+    console.assert(objToFen({}) === '9/9/9/9/9/9/9/9/9/9')
+    console.assert(objToFen({a2: 'rP', 'b2': 'bP'}) === '9/9/9/9/9/9/9/Pp7/9/9')
   }
 
   function squeezeFenEmptySquares (fen) {
@@ -1768,6 +1834,7 @@
 
   // TODO: do module exports here
   window['Xiangqiboard'] = constructor
+
 
   // expose util functions
   window['Xiangqiboard']['fenToObj'] = fenToObj

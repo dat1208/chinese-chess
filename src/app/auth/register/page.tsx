@@ -1,7 +1,47 @@
-import { Button } from '@mui/material';
+'use client'
+import { ApiRegisterUserResponse } from '@/interfaces/userInterface';
+import { notify } from '@/scripts/notification';
+import { useRouter } from 'next/router'
 import * as React from 'react';
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+
+  const [formData, setFormData] = React.useState({ username: '', password: '', fullname: '' , email: ''});
+
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:3201/api/v1/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data : ApiRegisterUserResponse = await response.json() as ApiRegisterUserResponse;
+        if(data.status.toLowerCase() === "success") {
+          notify('Hi👋 '+data.data.fullname , "success"); 
+          setTimeout(function() {
+            window.location.replace('/auth/login');
+          }, 3000); 
+        }
+      } else {
+        const data : ApiRegisterUserResponse = await response.json() as ApiRegisterUserResponse;
+        notify(data.message, "error");
+      }
+    } catch (error) {
+      notify('Login failed, try again!', "error");
+    }
+  };
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
     <div className="sm:mx-auto sm:w-full sm:max-w-sm">
@@ -12,17 +52,37 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     </div>
 
     <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-      <form className="space-y-6" action="#" method="POST">
+      <form className="space-y-6" onSubmit={handleSubmit}>
+      <div>
+          <label htmlFor="username" className="block text-sm font-medium leading-6 text-gray-900">
+            Username
+          </label>
+          <div className="mt-2">
+            <input
+              id="username"
+              name="username"
+              type="text"
+              value={formData.username}
+              onChange={handleChange}
+              autoComplete="username"
+              required
+              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            />
+          </div>
+        </div>
+
         <div>
-          <label htmlFor="name" className="block text-sm font-medium leading-6 text-gray-900">
+          <label htmlFor="fullname" className="block text-sm font-medium leading-6 text-gray-900">
             Your name
           </label>
           <div className="mt-2">
             <input
-              id="name"
-              name="name"
+              id="fullname"
+              name="fullname"
               type="text"
-              autoComplete="name"
+              value={formData.fullname}
+              onChange={handleChange}
+              autoComplete="fullname"
               required
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
             />
@@ -37,6 +97,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <input
               id="email"
               name="email"
+              value={formData.email}
+              onChange={handleChange}
               type="email"
               autoComplete="email"
               required
@@ -54,6 +116,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               id="password"
               name="password"
               type="password"
+              value={formData.password}
+              onChange={handleChange}
               autoComplete="new-password"
               required
               className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

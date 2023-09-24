@@ -6,7 +6,8 @@ import Loading from './components/Loading';
 import ThemeRegistry from '@/app/components/ThemeRegistry/ThemeRegistry';
 import Sidebar from './components/Sidebar';
 import { ToastContainer } from 'react-toastify';
-import './styles/globals.css'
+import '../styles/globals.css'
+import 'react-toastify/dist/ReactToastify.css';
 
 const DRAWER_WIDTH = 240;
 
