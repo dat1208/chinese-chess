@@ -14,6 +14,10 @@ const JoinRoomForm: React.FC = () => {
         notify(roomCode, "success");
   };
 
+  function handleCreateRoom() {
+    notify("Room Created", "success");
+  }
+
   return (
     <div className="p-4 space-y-4">
     <h1 className="text-2xl font-semibold">Join Room</h1>
@@ -31,6 +35,12 @@ const JoinRoomForm: React.FC = () => {
       >
         Join
       </button>
+ <button
+          className="rounded bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          onClick={handleCreateRoom}
+        >
+          Create
+        </button>
     </div>
   </div>
   );

@@ -35,3 +35,19 @@ export const getUser = (): User | null => {
 
   return null;
 };
+
+//-----------------------------------------------ROOM------------------------------------------------//
+export const setRoom = (room: string): void => {
+  localStorage.setItem('roomCurrent', room);
+}
+
+
+export const getRoom = (): string | null => {
+  const roomId = localStorage.getItem('roomCurrent');
+
+  if (roomId) {
+    return roomId;
+  }
+
+  return null;
+};

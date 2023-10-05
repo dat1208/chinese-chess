@@ -1,9 +1,15 @@
+'use client'
 import * as React from 'react';
 import ChessBoard from '../components/ChessBoard/ChessBoard';
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import ChatPopup from '../components/ChatPopup';
+import { GetServerSideProps } from 'next';
+
+export default function RootLayout({ children }: { children: React.ReactNode}) {
+
   return (
     <div>
-        <ChessBoard></ChessBoard>
-      </div>
+      <ChatPopup/>
+      <ChessBoard></ChessBoard>
+    </div>
   );
 }

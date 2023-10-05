@@ -19,10 +19,7 @@ function Sidebar() {
         <HomeRoundedIcon></HomeRoundedIcon>
         <span className="ml-2 text-sm font-medium">Home</span>
       </a>
-      <a className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-indigo-600" href="#">
-        <MeetingRoomRoundedIcon></MeetingRoomRoundedIcon>
-        <span className="ml-2 text-sm font-medium">List Room</span>
-      </a>
+      
       <a className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-indigo-600" href="/auth/login">
         <LoginRoundedIcon></LoginRoundedIcon>
         <span className="ml-2 text-sm font-medium">Login</span>

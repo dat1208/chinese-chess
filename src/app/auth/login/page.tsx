@@ -4,7 +4,9 @@ import { ApiUserResponse } from '@/interfaces/userInterface';
 import { notify } from '../../../scripts/notification';
 import { setTokens, getTokens, setUser } from '@/scripts/storage';
 import { Tokens } from '@/interfaces/tokenInterface';
+import { API_URL, SOCKET_URL } from '@/scripts/config';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+
   const [formData, setFormData] = React.useState({ username: '', password: '' });
   const tokens: Tokens = {
     accessToken: '',
@@ -17,9 +19,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     try {
-      const response = await fetch('http://localhost:3201/api/v1/login', {
+      const response = await fetch(API_URL+'/api/v1/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
