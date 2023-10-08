@@ -1,28 +1,43 @@
 'use client'
 import ZhChess from "zh-chess"
 import { useEffect, useRef, useState } from "react";
+import Script from "next/script";
+import React from "react";
+import { SOCKET_URL } from "@/scripts/config";
+import { getRoom } from "@/scripts/storage";
+import { io } from "socket.io-client";
 const ChessBoard = () => {
- 
-  const [gameInstance, setGame] = useState<ZhChess | null>(null)
-  const canvas = useRef<HTMLCanvasElement>(null)
-  useEffect(() => {
-    if (canvas.current) {
-      const CTX_WIDTH = 700, CTX_HEIGHT = 700,ctx = canvas.current.getContext('2d') as CanvasRenderingContext2D;
-      const game = new ZhChess({
-      ctx,
-      gameHeight: CTX_HEIGHT,
-      gameWidth: CTX_WIDTH,
+  React.useEffect(() => {
+    
+    
+    return () => {
+      
+    };
+  }, []);
+  return (
 
-  })
-      game.gameStart("RED")
-      game.gameOver();
-    canvas.current.addEventListener("click", game.listenClickAsync, false)
-      setGame(game)
-    }
-  }, [canvas])
-  return <div className="app">
-    <canvas ref={canvas} width="700" height="700" style={{width:700,height:700}} />
-  </div>
+    
+    <>
+    <link rel="stylesheet" type="text/css" href="./css/chess/styles.module.css"></link>
+      <div className="app">
+        <div className="cont-wrap">
+          <div className="cont">
+            <div className="chs"></div>
+            <div className="bg"></div>
+          </div>
+        </div>
+
+        <Script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossOrigin="anonymous"></Script>
+
+        <Script type="module" src="/js/chess/script.js"></Script>
+
+        
+      </div>
+      </>
+  )
+ 
+   
+  
 }
 
 export default ChessBoard;

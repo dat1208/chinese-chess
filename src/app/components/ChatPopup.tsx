@@ -10,12 +10,18 @@ interface SocketMetadata{
     data: any;
 }
 export default function Chat(): ReactNode {
+
+  const chatComponentStyles: React.CSSProperties = {
+    position: 'fixed',
+    top: 30,
+    right: 200
+  };
     
     React.useEffect(() => {
         const token =  getTokens();
         console.log(token?.accessToken);
         const socket = io(SOCKET_URL); // Connect to the Socket.io serve
-        socket.emit('JOIN_ROOM', roomCurrent, {userId: 'string' , accessToken: token?.accessToken, data: 'any'});
+        
 
 
         socket.on('message', (msg) => {
@@ -30,9 +36,10 @@ export default function Chat(): ReactNode {
       }, []);
   const roomCurrent = getRoom();
   return (
-    <div>
+    <>
       <h1>Chat</h1>
       <button>RoomId: {roomCurrent}</button>
-    </div>
+
+    </>
   );
 }
