@@ -25,17 +25,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <head>
-      <link rel="icon" href="/images/favicon.ico" />
+        <link rel="icon" href="/images/favicon.ico" />
       </head>
-      
-        <body>        
+
+      <body>
         <ThemeRegistry>
           <Drawer
             variant="permanent"
             anchor="left"
           >
             <Sidebar></Sidebar>
-            
+
           </Drawer>
           <Box
             component="main"
@@ -48,29 +48,29 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }}
           >
             {loading ? (
-        // Display loading component while loading is true
-        <Loading />
-      ) : (
-        // Display the actual application content when loading is false
-        children
-      )}
-           
+              // Display loading component while loading is true
+              <Loading />
+            ) : (
+              // Display the actual application content when loading is false
+              children
+            )}
+
           </Box>
         </ThemeRegistry>
         <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
         />
         <ToastContainer />
-        
+
       </body>
     </html>
   );
