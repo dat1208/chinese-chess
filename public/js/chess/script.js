@@ -24,7 +24,6 @@ document.addEventListener(CAN_ACCESS_CHESS_BOARD, (event) => {
   currentTeam = event?.detail.team;
 })
 
-
 var moveHistory = [];
 /// Draw the chessboard
 var cont = document.querySelector('.cont')

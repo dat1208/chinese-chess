@@ -6,16 +6,16 @@ interface ApiResponse {
     apiVersion: string;
     status: string;
     message: string;
-  }
+}
 
-enum RoomStatus{
-    WAITING,
-    ENDING,
-    PLAYING
+export enum RoomStatus {
+    WAITING = 'WAITING',
+    ENDING = 'ENDING',
+    PLAYING = 'PLAYING'
 }
 
 //--------------------------------------------------------------------ROOM_API----------------------------------------------------------//
- interface Room{
+interface Room {
     _id: string;
     roomId: string;
     createdBy: string;
@@ -30,4 +30,4 @@ interface ApiGetRoomResponse extends ApiResponse {
 }
 
 
-export type {ApiGetRoomResponse, Room}
+export type { ApiGetRoomResponse, Room }

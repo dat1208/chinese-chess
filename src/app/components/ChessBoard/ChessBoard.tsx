@@ -4,12 +4,10 @@ import { useSearchParams } from "next/navigation";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { Team } from "./interface";
-import { json } from "stream/consumers";
 
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
-
 
 // Get room id in this compoennt and user infor join to this room.
 const ChessBoard = () => {
@@ -117,7 +115,7 @@ const ChessBoard = () => {
         {players[0]?.displayName}
       </ul>
 
-      <Script type="module" rel="stylesheet preload prefetch" src="/js/chess/script.js" />
+      <Script type="module" rel="javascript preload prefetch" src="/js/chess/script.js" />
     </div>
   </>)
 }
