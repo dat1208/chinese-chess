@@ -12,7 +12,6 @@ export enum IOChanel {
   VIEWER_CHANEL = "VIEWER_CHANEL",
 }
 
-
 export class SocketIOService {
   private readonly IO_SERVER_URL = SOCKET_URL;
   private readonly DEFAULT_DEPLAY_RECONNECTION = 10000; // ms
