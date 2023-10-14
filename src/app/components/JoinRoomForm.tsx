@@ -1,9 +1,11 @@
 'use client'
 import React, { useState } from 'react';
 import { notify } from '../../scripts/notification';
+import { useRouter } from 'next/navigation';
 
 const JoinRoomForm: React.FC = () => {
   const [roomCode, setRoomCode] = useState('');
+  const router = useRouter()
 
   const handleJoinRoom = async () => {
     // Add your logic for joining the room here
@@ -11,7 +13,10 @@ const JoinRoomForm: React.FC = () => {
       notify("Please enter a room code", "error");
     }
     else
-      notify(roomCode, "success");
+    setTimeout(function () {
+      const gameByRoomID = `/game?room=${roomCode}`;
+      router.push(gameByRoomID, { scroll: false })
+    }, 500);
   };
 
   function handleCreateRoom() {
