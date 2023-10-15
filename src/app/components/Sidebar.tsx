@@ -1,12 +1,15 @@
-import React from 'react';
+import React, { useState } from "react";
 import HomeRoundedIcon from '@mui/icons-material/HomeRounded';
 import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import VpnKeyRoundedIcon from '@mui/icons-material/VpnKeyRounded';
+import ChatIcon from '@mui/icons-material/Message';
 import SportsEsportsRoundedIcon from '@mui/icons-material/SportsEsportsRounded';
 import Person from '@mui/icons-material/Person';
+import ModalMain from "./ModalMain"
 function Sidebar() {
+  const [showModal, setShowModal] = useState(false)
   return (
     <div className="flex flex-col items-center w-44 h-full overflow-hidden text-gray-100 bg-indigo-800">
       <a className="flex items-center w-full px-3 mt-3" href="/">
@@ -19,6 +22,14 @@ function Sidebar() {
             <HomeRoundedIcon></HomeRoundedIcon>
             <span className="ml-2 text-sm font-medium">Trang chủ</span>
           </a>
+          <button
+            onClick={() => showModal ? setShowModal(false) : setShowModal(true)}
+            className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-indigo-600"
+          >
+            <ChatIcon></ChatIcon>
+            <span className="ml-2 text-sm font-medium">Chat</span>
+          </button>
+          {showModal && <ModalMain setShowModal={setShowModal} />}
           <a className="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-indigo-600" href="/auth/login">
             <LoginRoundedIcon></LoginRoundedIcon>
             <span className="ml-2 text-sm font-medium">Đăng nhập</span>
