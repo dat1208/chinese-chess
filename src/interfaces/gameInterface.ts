@@ -24,10 +24,28 @@ interface Room {
     currentState: RoomStatus;
 }
 
+interface CreateRoom {
+    roomId: string;
+    createdBy: string;
+    createdAt: Date;
+    players: string[];
+    currentState: string;
+    inviteLink: string;
+    _id: string;
+}
+
+interface Player{
+
+}
+
 
 interface ApiGetRoomResponse extends ApiResponse {
     data: Room[];
 }
 
 
-export type { ApiGetRoomResponse, Room }
+interface ApiCreateRoomResponse extends ApiResponse{
+    data: CreateRoom;
+}
+
+export type { ApiGetRoomResponse, Room, ApiCreateRoomResponse }

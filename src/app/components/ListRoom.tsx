@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { notify } from '../../scripts/notification';
 import { ApiGetRoomResponse, Room, RoomStatus } from '@/interfaces/gameInterface';
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Divider, IconButton } from '@mui/material';
@@ -13,6 +13,11 @@ const ListRoom: React.FC = () => {
   const router = useRouter()
   const [rooms, setRooms] = useState<Room[]>([]);
   const [activeButton, setActiveButton] = useState('');
+
+  useEffect(() => {
+     handleButtonClick('WAITING');
+  }, [])
+
 
   const handleButtonClick = async (buttonName: string = 'WAITING') => {
     try {
@@ -106,6 +111,14 @@ const ListRoom: React.FC = () => {
           </div>
         ))}
       </List>
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="next >"
+        pageRangeDisplayed={5}
+        pageCount={5}
+        previousLabel="< previous"
+        renderOnZeroPageCount={null}
+      />
 
     </div>
   );

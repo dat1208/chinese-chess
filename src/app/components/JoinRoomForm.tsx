@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import { notify } from '../../scripts/notification';
 import { useRouter } from 'next/navigation';
-
+import { API_URL } from '@/scripts/config';
+import { ApiCreateRoomResponse } from '@/interfaces/gameInterface';
+import { getTokens } from '@/scripts/storage';
 const JoinRoomForm: React.FC = () => {
   const [roomCode, setRoomCode] = useState('');
   const router = useRouter()
-
+  const Token = getTokens();
   const handleJoinRoom = async () => {
     // Add your logic for joining the room here
     if (roomCode === undefined || roomCode === "") {
@@ -19,8 +21,38 @@ const JoinRoomForm: React.FC = () => {
     }, 500);
   };
 
-  function handleCreateRoom() {
-    notify("Room Created", "success");
+  async function handleCreateRoom() {
+
+    try {
+      const response = await fetch(API_URL+'/room', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': Token?.accessToken || ''
+        }
+      });
+
+      if (response.ok) {
+        const data : ApiCreateRoomResponse = await response.json() as ApiCreateRoomResponse;
+        
+        
+        if(data.status.toLowerCase() === "success") {
+         
+          notify('Created👋 '+data.data.roomId , "success");
+          
+          setTimeout(function () {
+            const gameByRoomID = `/game?room=${data.data.roomId}`;
+            router.push(gameByRoomID, { scroll: false })
+          }, 500);
+                 
+        }
+      } else {
+        notify('Create failed, try again!', "error");
+      }
+    } catch (error) {
+      notify('Create failed, try again!', "error");
+    }
+    
   }
 
   return (
