@@ -9,7 +9,7 @@ const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
 
-// Get room id in this compoennt and user infor join to this room.
+// Get room id in this component and user info join to this room.
 const ChessBoard = () => {
   const [nextTurn, setNextTurn] = useState(Team.RED);
   const [team, setTeam] = useState(); // red/black

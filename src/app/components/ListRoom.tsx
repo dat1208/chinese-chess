@@ -111,14 +111,7 @@ const ListRoom: React.FC = () => {
           </div>
         ))}
       </List>
-      <ReactPaginate
-        breakLabel="..."
-        nextLabel="next >"
-        pageRangeDisplayed={5}
-        pageCount={5}
-        previousLabel="< previous"
-        renderOnZeroPageCount={null}
-      />
+
 
     </div>
   );
