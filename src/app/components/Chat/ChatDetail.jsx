@@ -9,13 +9,13 @@ const ChatDetail = ({ }) => {
     const [showModal, setShowModal] = useState(false)
     return (
         <div
-            className='fixed inset-0 p-10 bg-indigo-800'
+            className='fixed p-10 bg-indigo-800'
             id='main'
             style={{
                 width: '350px',
-                height: '410px',
-                marginTop: '50px',
-                marginLeft: '180px',
+                height: '600px',
+                top: '30px',
+                right: '15px',
                 borderRadius: '25px',
             }}
         >
