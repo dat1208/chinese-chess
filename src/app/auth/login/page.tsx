@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           setUser(data.data.userResult);
           notify('Hi👋 '+data.data.userResult.fullname , "success");
           setTimeout(function() {
-            window.location.replace('/auth/profile');
+            window.location.replace('/');
           }, 3000);
                  
         }
