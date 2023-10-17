@@ -13,15 +13,70 @@ const ListRoom: React.FC = () => {
   const router = useRouter()
   const [rooms, setRooms] = useState<Room[]>([]);
   const [activeButton, setActiveButton] = useState('');
+  const [reachedEndOfList, setReachedEndOfList] = useState(false);
+
 
   useEffect(() => {
      handleButtonClick('WAITING');
+
+     window.addEventListener('scroll', handleScroll);
+
+     return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [])
 
+  const handleScroll = () => {
+    const windowHeight = window.innerHeight;
+    const documentHeight = document.documentElement.scrollHeight;
+    const scrollTop = window.scrollY;
 
+    if (windowHeight + scrollTop >= documentHeight - 100) {
+      // User has reached the bottom of the page, load more data
+      if (!reachedEndOfList) {
+        handleLoadMore(activeButton);
+      }
+    }
+  };
+
+  const handleLoadMore = async (buttonName: string = 'WAITING') => {
+    try {
+      const nextPage = Math.ceil(rooms.length / 5) + 1; // Calculate the next page based on the current number of rooms
+  
+      const response = await fetch(API_URL + `/room?currentState=${buttonName}&page=${nextPage}&pageSize=5`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+  
+      if (response.ok) {
+        const data: ApiGetRoomResponse = await response.json() as ApiGetRoomResponse;
+  
+        if (data.status.toLowerCase() === "success") {
+          const newRooms = data.data;
+          setRooms(prevRooms => [...prevRooms, ...newRooms]); 
+
+          if (newRooms.length < 5) {
+            setReachedEndOfList(true); 
+          }
+        }
+  
+        
+  
+      } else {
+        notify('Get failed, try again!', "error");
+      }
+    } catch (error) {
+      notify('Get failed, try again!', "error");
+    }
+  };
+  
   const handleButtonClick = async (buttonName: string = 'WAITING') => {
     try {
-      const response = await fetch(API_URL + '/room?currentState=' + buttonName, {
+      const response = await fetch(API_URL + '/room?currentState=' + buttonName + '&page=1&pageSize=10', {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -80,7 +135,7 @@ const ListRoom: React.FC = () => {
         Đang thi đấu
       </button>
       <List sx={{ width: '50%', bgcolor: 'background.paper' }}>
-        {rooms.map((room) => (
+        {rooms.map((room, index) => (
           <div key={room.roomId}>
             <ListItem alignItems="flex-start" secondaryAction={
               <IconButton onClick={() => handleJoinButtonClick(room.roomId)} edge="end" aria-label="join">
@@ -102,14 +157,30 @@ const ListRoom: React.FC = () => {
                     >
                       {room?.currentState === RoomStatus.WAITING ? 'Thiếu người' : 'Đang thi đấu'}
                     </Typography>
-                    {` — ${room.players.length} người chơi`}
+                    {room.players && room.players.length !== undefined ? ` — ${room.players.length} người chơi` : ` — 0 người chơi`}
+
                   </React.Fragment>
                 }
               />
             </ListItem>
             <Divider variant="inset" component="li" />
+            {index === rooms.length - 1 && reachedEndOfList && (
+        <Typography align="center" variant="body2" color="text.secondary">
+          End of List
+        </Typography>
+      )}
           </div>
         ))}
+        {reachedEndOfList && rooms.length === 0 && (
+        <Typography align="center" variant="body2" color="text.secondary">
+          No Rooms Found
+        </Typography>
+      )}
+      {!reachedEndOfList && (
+        <Typography align="center" variant="body2" color="text.secondary">
+          Loading...
+        </Typography>
+      )}
       </List>
 
 
