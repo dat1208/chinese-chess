@@ -4,6 +4,9 @@ import { useSearchParams } from "next/navigation";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { Team } from "./interface";
+import ChatIcon from '@mui/icons-material/Message';
+import ModalMain from "../ModalMain";
+
 
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
@@ -17,7 +20,7 @@ const ChessBoard = () => {
 
   const [viewers, setViewers] = useState<any[]>([]);
   const [players, setPlayers] = useState<any[]>([]);
-
+  const [showModal, setShowModal] = useState(false)
   const searchParams = useSearchParams();
   const room = searchParams.get('room') ?? '';
 
@@ -109,12 +112,18 @@ const ChessBoard = () => {
       <ul>
         {viewers[0]?.displayName}
       </ul>
-
+      {showModal && <ModalMain setShowModal={setShowModal} />}
       Đứa đang chơi là là:
       <ul>
         {players[0]?.displayName}
       </ul>
+      <button
+        onClick={() => showModal ? setShowModal(false) : setShowModal(true)}
+        className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
+      >
+        <ChatIcon className="text-gray-100" />
 
+      </button>
       <Script type="module" rel="javascript preload prefetch" src="/js/chess/script.js" />
     </div>
   </>)
