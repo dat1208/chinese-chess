@@ -4,12 +4,13 @@ import { SOCKET_URL } from "./config";
 export enum IOChanel {
   MAIN_CONNECTION = "connection",
   DISCONECTION_CHANEL = 'disconnect',
-  CHAT_CHANEL = "CHAT_CHANEL",
+  JOIN_CHAT = "JOIN_CHAT",
   GAME_CHANEL = "GAME_CHANEL",
   JOIN_ROOM = "JOIN_ROOM",
   LEAVE_ROOM = "LEAVE_ROOM",
   ERROR_CHANEL = "ERROR_CHANEL",
   VIEWER_CHANEL = "VIEWER_CHANEL",
+  CHAT_CHANEL = "CHAT_CHANEL",
 }
 
 export class SocketIOService {
@@ -18,7 +19,6 @@ export class SocketIOService {
 
   reqConnection = (medataData: { roomId: string, team?: 'RED' | 'BLACK' }): Socket => {
     const accessToken = localStorage.getItem('accessToken') ?? 'TokenNotFound';
-
     return io(this.IO_SERVER_URL, {
       reconnectionDelayMax: this.DEFAULT_DEPLAY_RECONNECTION,
       auth: {
