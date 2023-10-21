@@ -8,15 +8,17 @@ import User4 from "../../../../public/images/hero4.jpg"
 import { IOChanel, SocketIOService } from "@/scripts/socket";
 import { useSearchParams } from "next/navigation";
 import {ReceiverComponent} from '../ChessBoard/ChessBoard'
-var DisplayNewMessage = '';
+var displayListMessage = new Array();
 var Sender = '';
 export function DisplaySenderComponent(sender) {
     Sender = sender;
 }
-
+export function DisplayMessage(message) {
+    displayListMessage = message;
+    console.log('message list: ' + JSON.stringify(displayListMessage));
+}
 
 const ChatDetail = ({ }) => {
-
     const [showModal, setShowModal] = useState(false);
     const [messages, setMessages] = useState([]);
     const [newMessage, setNewMessage] = useState('');
@@ -27,25 +29,24 @@ const ChatDetail = ({ }) => {
     //     socket.emit(IOChanel.CHAT_CHANEL, newMessage);
     //     setNewMessage('');
     //   };
-
+    
     const displayMsgRef = useRef(null);
     const display = (msg, type) => {
         const msgDiv = document.createElement('div');
         let className = type;
-        msgDiv.classList.add(className, 'message-row');
+        msgDiv.classList.add(className, 'flex');
+        msgDiv.classList.add(className, 'justify-start');
+        msgDiv.classList.add(className, 'mb-3');
         let times = new Date().toLocaleTimeString();
 
         let innerText = `
-        <div class="message-title">
-            👻<span>${msg.user}</span>
-        </div>
-        <div class="message-text">
-            ${msg.message}
-        </div>
-        <div class="message-time">
-            ${times}
-        </div>
-        `;
+            <div className="flex items-center group relative">
+                <Image src=${User1} className='w-10 h-10 rounded-full mr-5' />
+                <div className="bg-gray-200 p-2 rounded-lg">${msg.message}</div>
+                <div className="hidden group-hover:block absolute -top-10 -left-17 text-black bg-white rounded-[0.5rem] p-1">
+                ${msg.user}
+                </div>
+        </div>`;
 
         msgDiv.innerHTML = innerText;
 
@@ -89,24 +90,15 @@ const ChatDetail = ({ }) => {
         >
 
             <div>
-                <button
+                {/* <button
                     onClick={() => showModal ? setShowModal(false) : setShowModal(true)}
                 >
                     <ArrowBackIosIcon className="h-6 w-6" ></ArrowBackIosIcon>
 
                     <span className="ml-2 text-sm font-medium">Back</span>
-                </button>
+                </button> */}
                 {/* Phần chat */}
                 <div className="p-4 text-black rounded-lg" ref={displayMsgRef}>
-                    <div className="flex justify-start mb-3">
-                        <div className="flex items-center group relative">
-                            <Image src={User1} className='w-10 h-10 rounded-full mr-5' />
-                            <div className="bg-gray-200 p-2 rounded-lg">Test</div>
-                            <div className="hidden group-hover:block absolute -top-10 -left-17 text-black bg-white rounded-[0.5rem] p-1">
-                                Khanhs
-                            </div>
-                        </div>
-                    </div>
                     <div className="flex justify-end mb-3">
                         <div className="flex items-center group relative">
                             <div className="bg-blue-500 p-2 rounded-lg text-white">Chào Kha!</div>

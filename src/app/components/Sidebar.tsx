@@ -4,12 +4,12 @@ import MeetingRoomRoundedIcon from '@mui/icons-material/MeetingRoomRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import VpnKeyRoundedIcon from '@mui/icons-material/VpnKeyRounded';
-import ChatIcon from '@mui/icons-material/Message';
+
 import SportsEsportsRoundedIcon from '@mui/icons-material/SportsEsportsRounded';
 import Person from '@mui/icons-material/Person';
-import ModalMain from "./ModalMain"
+import ModalMain from "./ModalMain";
 function Sidebar() {
-  const [showModal, setShowModal] = useState(false)
+  
   return (
     <div className="flex flex-col items-center w-44 h-full overflow-hidden text-gray-100 bg-indigo-800 relative">
       <a className="flex items-center w-full px-3 mt-3" href="/">
@@ -22,7 +22,7 @@ function Sidebar() {
             <HomeRoundedIcon></HomeRoundedIcon>
             <span className="ml-2 text-sm font-medium">Trang chủ</span>
           </a>
-          {showModal && <ModalMain setShowModal={setShowModal} />}
+          
           <a className="flex items-center w-full h-12 px-3 mt-2 rounded hover-bg-indigo-600" href="/auth/login">
             <LoginRoundedIcon></LoginRoundedIcon>
             <span className="ml-2 text-sm font-medium">Đăng nhập</span>
@@ -42,12 +42,7 @@ function Sidebar() {
         <LogoutRoundedIcon></LogoutRoundedIcon>
         <span className="ml-2 text-sm font-medium">Logout</span>
       </a>
-      <button
-        onClick={() => showModal ? setShowModal(false) : setShowModal(true)}
-        className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
-      >
-        <ChatIcon></ChatIcon>
-      </button>
+      
     </div>
 
   );
