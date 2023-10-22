@@ -8,7 +8,7 @@ import { DisplaySenderComponent } from "../Chat/ChatDetail";
 import list, { List } from "postcss/lib/list";
 import ChatIcon from '@mui/icons-material/Message';
 import ModalMain from "../ModalMain";
-import {DisplayMessage} from '../Chat/ChatDetail'
+import DisplayMessage from '../Chat/ChatDetail'
 
 var MessageReceived = '';
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
