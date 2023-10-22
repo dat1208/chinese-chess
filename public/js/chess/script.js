@@ -1,6 +1,6 @@
 'use strict'
 var chsArr = null;
-
+var chsIsDead = [];
 
 //  #region event handler
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
@@ -13,7 +13,7 @@ let currentTeam = -1;
 document.addEventListener(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, (event) => {
   const board = event?.detail.board;
   const nextSide = event?.detail?.nextTurnTeam;
-
+  console.log('handle from socket');
   updateChessboard(board);
   nextTurn(nextSide);
 })
@@ -119,16 +119,16 @@ document.addEventListener('mousedown', function (e) {
     e.target.classList.contains(side > 0 ? 'red' : 'green')) {
 
     // lock when user cant not acces check board == viewer
-    if (!canAccessChessBoard) {
-      alert(`Bạn chỉ là con người bình thường làm sao mà bấm được vào bàn cờ`)
-      return;
-    }
+    // if (!canAccessChessBoard) {
+    //   alert(`Bạn chỉ là con người bình thường làm sao mà bấm được vào bàn cờ`)
+    //   return;
+    // }
 
     // Nếu bạn bên đỏ thì không được move cờ bên đen và ngược lại
-    if (currentTeam !== side) {
-      alert(`Chơi ăn gian - không được đụng vào cờ của đối thủ`);
-      return;
-    }
+    // if (currentTeam !== side) {
+    //   alert(`Chơi ăn gian - không được đụng vào cờ của đối thủ`);
+    //   return;
+    // }
 
     // lock when user cant not acces check board == viewer
 
@@ -152,7 +152,11 @@ document.addEventListener('mousedown', function (e) {
     if (!canGo(c, x, y)) return
     chsArr.forEach(function (c, i) {
       if (!c.dead && c[2] === y && c[3] === x) {
+
+        //If can go and can kill chess
         c.dead = true
+        chsIsDead.push(c);
+        console.log(chsIsDead);
         chss[i].style.display = 'none'
       }
     })
@@ -175,10 +179,11 @@ document.addEventListener('mousedown', function (e) {
       chss[done[-side]].classList.remove('active')
     }
 
-
     pick[side] = null
-    updateChessboard(chsArr);
-    nextTurn();
+    //updateChessboard(chsArr);
+    console.log('Side: '+side.toString());
+    console.log(chsArr);
+    console.log('Chess is dead:', chsIsDead);
     return
   }
   // }
@@ -296,6 +301,7 @@ function recordMove(c, fromX, fromY, toX, toY) {
     to: [toX, toY]     // Tọa độ điểm kết thúc
   };
   moveHistory.push(move);
+  console.log(moveHistory);
 }
 
 function updateChsArr(c, fromX, fromY, toX, toY) {
@@ -323,7 +329,8 @@ function updateChsArr(c, fromX, fromY, toX, toY) {
   const updateBoardCustomEvent = new CustomEvent(UPDATE_CHESS_BOARD_CUSTOM_EVENT, {
     detail: {
       board_matrix: chsArr,
-      nextTurn: nextTurn()
+      nextTurn: nextTurn(),
+      chsIsDead: chsIsDead
     }
   });
   document.dispatchEvent(updateBoardCustomEvent);
