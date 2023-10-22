@@ -119,16 +119,16 @@ document.addEventListener('mousedown', function (e) {
     e.target.classList.contains(side > 0 ? 'red' : 'green')) {
 
     // lock when user cant not acces check board == viewer
-    if (!canAccessChessBoard) {
-      alert(`Bạn chỉ là con người bình thường làm sao mà bấm được vào bàn cờ`)
-      return;
-    }
+    // if (!canAccessChessBoard) {
+    //   alert(`Bạn chỉ là con người bình thường làm sao mà bấm được vào bàn cờ`)
+    //   return;
+    // }
 
-    // Nếu bạn bên đỏ thì không được move cờ bên đen và ngược lại
-    if (currentTeam !== side) {
-      alert(`Chơi ăn gian - không được đụng vào cờ của đối thủ`);
-      return;
-    }
+    // // Nếu bạn bên đỏ thì không được move cờ bên đen và ngược lại
+    // if (currentTeam !== side) {
+    //   alert(`Chơi ăn gian - không được đụng vào cờ của đối thủ`);
+    //   return;
+    // }
 
     // lock when user cant not acces check board == viewer
 
