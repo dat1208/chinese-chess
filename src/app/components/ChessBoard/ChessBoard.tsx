@@ -7,7 +7,7 @@ import { Team } from "./interface";
 import { DisplaySenderComponent } from "../Chat/ChatDetail";
 import list, { List } from "postcss/lib/list";
 import ChatIcon from '@mui/icons-material/Message';
-import ModalMain from "../ModalMain";
+import ChatDetail from "../Chat/ChatDetail";
 import DisplayMessage from '../Chat/ChatDetail'
 
 var MessageReceived = '';
@@ -56,7 +56,7 @@ const ChessBoard = () => {
 
   const [viewers, setViewers] = useState<any[]>([]);
   const [players, setPlayers] = useState<any[]>([]);
-  const [showModal, setShowModal] = useState(false)
+ 
 
   const searchParams = useSearchParams();
   const room = searchParams.get('room') ?? '';
@@ -151,7 +151,7 @@ const ChessBoard = () => {
 
     }
   }, [viewers,MessageReceived]);
-
+  const [showModal, setShowModal] = useState(false)
   return (<>
     <link rel="stylesheet" type="text/css" href="./css/chess/styles.module.css"></link>
     <div className="app">
@@ -175,7 +175,7 @@ const ChessBoard = () => {
       <ul>
         {viewers[0]?.displayName}
       </ul>
-      {showModal && <ModalMain setShowModal={setShowModal} />}
+      {showModal && <ChatDetail/>}
       Đứa đang chơi là là:
       <ul>
         {players[0]?.displayName}
