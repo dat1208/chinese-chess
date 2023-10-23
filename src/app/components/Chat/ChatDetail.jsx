@@ -57,6 +57,11 @@ const ChatDetail = ({ socket, username }) => {
       });
     });
   }, [socket]);
+  const customScrollbarStyle = {
+    overflowY: 'auto',
+    maxHeight: '490px',
+    scrollbarColor: '#f5f5f5',
+  };
   return (
     <div
       id="main"
@@ -68,35 +73,41 @@ const ChatDetail = ({ socket, username }) => {
         height: "600px",
         top: "30px",
         right: "10px",
-        borderRadius: "25px",
+        borderRadius: "15px",
         boxShadow: "0px 0px 10px rgba(0, 0, 0, 1)",
       }}
     >
-      <div>
-        {messageList.map((messageContent, key) => {
-          return (
-            <div
-              key={key}
-              className={
-                messageContent.author == username
-                  ? styles.containerReviceMess
-                  : styles.containerSendMess
-              }
-            >
-              <div className={styles.mess}>
-                <div className={styles.detail}>{messageContent.message}</div>
-                <Image
-                  className={styles.avatar}
-                  src={messageContent.author == username ? User1 : User4}
-                  alt="User Image"
-                />
-                <div className={styles.name}>{messageContent.author}</div>
-                <div className={styles.time}>{messageContent.time}</div>
+      <div
+        style={customScrollbarStyle}
+      >
+        <div style={{
+          marginTop: "30px"
+        }}>
+          {messageList.map((messageContent, key) => {
+            return (
+              <div
+                key={key}
+                className={
+                  messageContent.author == username
+                    ? styles.containerReviceMess
+                    : styles.containerSendMess
+                }
+              >
+                <div className={styles.mess}>
+                  <div className={styles.detail}>{messageContent.message}</div>
+                  <Image
+                    className={styles.avatar}
+                    src={messageContent.author == username ? User1 : User4}
+                    alt="User Image"
+                  />
+                  <div className={styles.name}>{messageContent.author}</div>
+                  <div className={styles.time}>{messageContent.time}</div>
+                </div>
               </div>
-            </div>
-          );
-        })}
-        <div className="absolute bottom-0 left-0 w-full p-4 border-t border-gray-300">
+            );
+          })}
+        </div>
+        <div className="absolute bottom-0 left-0 w-full p-3 border-t border-gray-300">
           <div className="flex items-center">
             <input
               className="w-full p-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500 text-black"
