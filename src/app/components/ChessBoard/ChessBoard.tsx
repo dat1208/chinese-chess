@@ -29,6 +29,12 @@ const ChessBoard = () => {
   }
 
   useEffect(() => {
+    const script = document.createElement('script');
+    script.src = 'http://localhost:3000/js/chess/script.js';
+    script.async = true;
+
+    document.body.appendChild(script);
+
     const ioService = new SocketIOService();
 
     const socket = ioService.reqConnection({ roomId: room as string });
@@ -69,7 +75,7 @@ const ChessBoard = () => {
     socket.emit(IOChanel.JOIN_ROOM);
 
     socket.on(IOChanel.GAME_CHANEL, (metadata: any, nextTurnTeam : string, chsIsDead : any) => {
-     
+     console.log('reeive from server', chsIsDead, nextTurnTeam);
       const eventData = {
         detail: {
           board: metadata,
@@ -81,13 +87,13 @@ const ChessBoard = () => {
       document.dispatchEvent(updateCheckBoard);
     })
 
-    document.addEventListener(UPDATE_CHESS_BOARD_CUSTOM_EVENT, (event: any) => {
-      socket.emit(IOChanel.GAME_CHANEL, event.detail.board_matrix, event.detail.nextTurn, event.detail.chsIsDead);
+     document.addEventListener(UPDATE_CHESS_BOARD_CUSTOM_EVENT, (event: any) => {
+     socket.emit(IOChanel.GAME_CHANEL, event.detail.board_matrix, event.detail.nextTurn, event.detail.chsIsDead);
       // Todo: Work;
     });
 
     return () => {
-
+      document.body.removeChild(script);
     }
   }, [viewers])
 
@@ -126,7 +132,7 @@ const ChessBoard = () => {
         <ChatIcon className="text-gray-100" />
 
       </button>
-      <Script type="module" rel="javascript preload prefetch" src="/js/chess/script.js" />
+      
     </div>
   </>)
 }
