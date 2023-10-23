@@ -36,11 +36,26 @@ const ChatDetail = ({ socket, username}) => {
           setCurrentMessage('');
         }
     }
-    useEffect(()=>{
+        const getCache = (key) => {
+            const data = localStorage.getItem(key);
+            return data ? JSON.parse(data) : null;
+        };
+
+        useEffect(() => {
+            const cachedMessages = getCache("chatMessages");
+            if (cachedMessages) {
+              setMessageList(cachedMessages);
+            }
+          }, []);
+
+    useEffect(()=>{   
         socket.on(IOChanel.CHAT_CHANEL_RECEIVE, (data) => {
-            setMessageList((list) => [...list, data]);
-            console.log('Data receive from chat detail: '+ JSON.stringify(messageList));
-          });
+            setMessageList((list) => {
+            const updatedList = [...list, data];
+            localStorage.setItem("chatMessages", JSON.stringify(updatedList));
+            return updatedList;
+            });
+        });     
     }, [socket])
     return (
         <div
