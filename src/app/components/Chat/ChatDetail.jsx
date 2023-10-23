@@ -55,37 +55,6 @@ const ChatDetail = ({ socket, username}) => {
             }}
         >
             <div>
-                <div className={styles.containerSendMess}>
-                    {/* phần con */}
-                    <div className={styles.mess}>
-                        <Image className={styles.avatar} src={User1} alt="User Image" />
-                        <div className={styles.detail}>Xin chào!</div>
-                        <div className={styles.name}>Phan Hoàng Kha</div>
-                    </div>
-                </div>
-                {/* phần cha */}
-                <div className={styles.containerReviceMess}>
-                    {/* phần con */}
-                    <div className={styles.mess}>
-                        <div className={styles.detail}>Chào Kha!</div>
-                        <Image className={styles.avatar} src={User4} alt="User Image" />
-                        <div className={styles.name}>Hồ Thành Vinh</div>
-                    </div>
-                </div>
-                <div className={styles.containerSendMess}>
-                    <div className={styles.mess}>
-                        <Image className={styles.avatar} src={User1} alt="User Image" />
-                        <div className={styles.detail}>Kéo api xong chưa?</div>
-                        <div className={styles.name}>Phan Hoàng Kha</div>
-                    </div>
-                </div>
-                <div className={styles.containerReviceMess}>
-                    <div className={styles.mess}>
-                        <div className={styles.detail}>Đang kéo api lòi l nè Kha!</div>
-                        <Image className={styles.avatar} src={User4} alt="User Image" />
-                        <div className={styles.name}>Hồ Thành Vinh</div>
-                    </div>
-                </div>
                 {messageList.map((messageContent, key) => {
                     return (
                     <div
@@ -98,7 +67,7 @@ const ChatDetail = ({ socket, username}) => {
                     >
                         <div className={styles.mess}>
                                 <div className={styles.detail}>{messageContent.message}</div>
-                                <Image className={styles.avatar} src={User4} alt="User Image" />
+                                <Image className={styles.avatar} src={messageContent.author == username ?User1 :User4} alt="User Image" />
                                 <div className={styles.name}>{messageContent.author}</div>
                         </div>
                     </div>
@@ -127,6 +96,7 @@ const ChatDetail = ({ socket, username}) => {
                     </div>
                 </div>
             </div>
+            {showModal && <ModalMain setShowModal={setShowModal} />}
         </div>
     );
 };

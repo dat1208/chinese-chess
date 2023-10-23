@@ -4,7 +4,6 @@ import { useSearchParams } from "next/navigation";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { Team } from "./interface";
-import ChatDetail from "../Chat/ChatDetail";
 import list, { List } from "postcss/lib/list";
 import ChatIcon from '@mui/icons-material/Message';
 import ChatDetail from "../Chat/ChatDetail";
@@ -134,7 +133,7 @@ const ChessBoard = () => {
       <ul>
         {viewers[0]?.displayName}
       </ul>
-      {showModal && <ChatDetail/>}
+      {showModal && <ChatDetail socket={socket} username={sender}/>}
       Đứa đang chơi là là:
       <ul>
         {players[0]?.displayName}
