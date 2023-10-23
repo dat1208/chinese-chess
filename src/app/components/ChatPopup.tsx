@@ -20,19 +20,7 @@ export default function Chat(): ReactNode {
     React.useEffect(() => {
         const token =  getTokens();
         console.log(token?.accessToken);
-        // const socket = io(SOCKET_URL); // Connect to the Socket.io serve
-        
 
-
-        // socket.on('message', (msg) => {
-        //   console.log('Received message:', msg);
-        //   // Handle the message here
-        // });
-        
-        
-        // return () => {
-        //   socket.disconnect(); // Disconnect when component unmounts
-        // };
       }, []);
   const roomCurrent = getRoom();
   return (

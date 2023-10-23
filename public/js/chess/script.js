@@ -144,11 +144,7 @@ document.addEventListener('mousedown', function (e) {
     //   return;
     // }
 
-<<<<<<< HEAD
-    // Nếu bạn bên đỏ thì không được move cờ bên đen và ngược lại
-=======
     // // Nếu bạn bên đỏ thì không được move cờ bên đen và ngược lại
->>>>>>> feature/kha/guard
     // if (currentTeam !== side) {
     //   alert(`Chơi ăn gian - không được đụng vào cờ của đối thủ`);
     //   return;
