@@ -39,7 +39,6 @@ const ChessBoard = () => {
   const room = searchParams.get('room') ?? '';
   const ioService = new SocketIOService();
   const socket = ioService.reqConnection({ roomId: room as string });
-  const [MessageReceived, setMessageReceive] = useState();
 
 
   useEffect(() => {
@@ -57,7 +56,7 @@ const ChessBoard = () => {
     });
 
     socket.on(IOChanel.JOIN_ROOM, (response: any) => {
-      console.log(response.metadata)
+      //console.log(response.metadata)
       // #region handle policy can access chess board;
       const canAccessChessBoard: any = {};
 
@@ -114,7 +113,7 @@ const ChessBoard = () => {
     return () => {
 
     }
-  }, [viewers,MessageReceived]);
+  }, []);
   return (<>
     <link rel="stylesheet" type="text/css" href="./css/chess/styles.module.css"></link>
     <div className="app">
