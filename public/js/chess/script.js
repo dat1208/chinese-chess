@@ -28,9 +28,9 @@ document.addEventListener(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, (event) =
   updateChessboard(board);
   nextTurn(nextSide);
   console.log('Received update:');
-  console.log(chsArr);
-  console.log(nextSide);
-  console.log(chsIsDead);
+  console.log(side);
+
+  isCheck(side, chsArr)
 })
 
 // Event can access chess board
@@ -76,7 +76,6 @@ for (var i = 0; i < mks.length; i++) {
   mk.style.left = (mks[i][1] * 64 + 2) + 'px'
   bg.appendChild(mk)
 }
-
 /// Draw chess pieces
 /// [side, name, y, x]
 var chs = document.querySelector('.chs')
@@ -102,7 +101,7 @@ for (var i = 0; i < chsArr.length; i++) {
 }
 
 function placeChess(side, name, y, x, i) {
-  console.log('placeChes Running');
+  
   var ch = document.createElement('span')
   ch.textContent = name
   ch.classList.add('ch', side > 0 ? 'red' : 'green')
@@ -169,6 +168,7 @@ document.addEventListener('mousedown', function (e) {
     x = round(x)
     y = round(y)
     var c = chsArr[pick[side]]
+
     if (!canGo(c, x, y)) return
     chsArr.forEach(function (c, i) {
       if (!c.dead && c[2] === y && c[3] === x) {
@@ -181,13 +181,17 @@ document.addEventListener('mousedown', function (e) {
     })
     // update board state
     recordMove(c, c[3], c[2], x, y, i);
-    console.log(moveHistory);
 
-
+    if (isMoveCausingCheck(side, c[3], c[2], x, y)) {
+      console.log("Nước đi này gây chiếu tướng!");
+    } else {
+      console.log("Nước đi này không gây chiếu tướng.");
+    }
+    
+    
     var ch = chss[pick[side]]
     ch.style.left = en(x) + 'px'
     ch.style.top = en(y) + 'px'
-    
 
     c[2] = y
     c[3] = x
@@ -196,8 +200,7 @@ document.addEventListener('mousedown', function (e) {
       {
         c.cross = true
         chsIsCross.push(c);
-        console.log('Chess is cross');
-        console.log(chsIsCross);
+       
       } 
     }
 
@@ -209,9 +212,6 @@ document.addEventListener('mousedown', function (e) {
     pick[side] = null
 
     updateChsArr(chsArr, chsIsDead);
-    console.log('Side: '+side.toString());
-    console.log(chsArr);
-    console.log('Chess is dead:', chsIsDead);
     updateChessboard(chsArr);
     return
   }
@@ -228,6 +228,7 @@ function canGo(c, x, y) {
   // })) return false
   let dx = x - c[3]
   let dy = y - c[2]
+
   if (c[1] === '兵' || c[1] === '卒') {
     if (c.cross && dy === 0 && abs(dx) === 1) return true
     return dx === 0 && dy === c[0]
@@ -322,6 +323,51 @@ function nextTurn(_side) {
   return side;
 }
 
+function findPieceCoordinatesByName(name) {
+  for (var i = 0; i < chsArr.length; i++) {
+    var pieceInfo = chsArr[i];
+    if (pieceInfo[1] === name) {
+      return pieceInfo; // Trả về tọa độ [x, y]
+    }
+  }
+  return null; // Trả về null nếu không tìm thấy
+}
+
+function isCheck(phe, board) {
+  var kingPos = findPieceCoordinatesByName(phe === 1 ? '帅' : '将', board); // Tìm tướng của phe
+  console.log('-----------------------------------isCheck--------------------------------------')
+  console.log(kingPos);
+  for (var i = 0; i < board.length; i++) {
+      var pieceInfo = board[i];
+      if (pieceInfo[0] === -phe) {
+          var isValidAttack = canGo(pieceInfo, kingPos[3], kingPos[2]);
+          if (isValidAttack) {
+              console.log(`Tướng của phe ${phe} bị chiếu!`);
+              return true;
+          }
+      }
+  }
+  return false;
+}
+
+function isMoveCausingCheck(side, fromX, fromY, toX, toY) {
+  // Bước 1: Tạo bản sao tạm thời
+  var tempChsArr = chsArr.slice(); // Tạo bản sao của chsArr
+
+  // Bước 2: Thực hiện nước đi của bạn
+  var pieceToMove = tempChsArr.find(piece => piece[2] === fromY && piece[3] === fromX);
+  pieceToMove[2] = toY;
+  pieceToMove[3] = toX;
+
+  // Bước 3: Kiểm tra xem nước đi này có gây chiếu tướng không
+  var isCheckAfterMove = isCheck(side, tempChsArr); // Kiểm tra chiếu tướng cho phe đang đi
+
+  // Bước 4: Khôi phục trạng thái ban đầu
+  tempChsArr = chsArr.slice(); // Khôi phục trạng thái ban đầu của chsArr
+
+  return isCheckAfterMove;
+}
+
 
 function recordMove(c, fromX, fromY, toX, toY, id) {
   
@@ -336,7 +382,6 @@ function recordMove(c, fromX, fromY, toX, toY, id) {
 
 // Gọi sự kiện di chuyển quân cờ có ID là 0 đến tọa độ (200, 200)
 }
-
 
 function updateChsArr(chsArr, chsIsDead) {
   // PUSH EVENT TO COMPONENT
@@ -387,6 +432,6 @@ function updateChessboard(board) {
         chss[i].style.display = 'none';
     }
 }
-
+  
   
 }

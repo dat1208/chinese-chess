@@ -1,82 +1,29 @@
-'use client'
 import React, { useEffect, useState } from 'react';
 import { notify } from '../../scripts/notification';
 import { ApiGetRoomResponse, Room, RoomStatus } from '@/interfaces/gameInterface';
 import { List, ListItem, ListItemAvatar, Avatar, ListItemText, Typography, Divider, IconButton } from '@mui/material';
 import AddCircleOutlineRoundedIcon from '@mui/icons-material/AddCircleOutlineRounded';
 import { API_URL } from '@/scripts/config';
-import { setRoom, } from '@/scripts/storage';
+import { setRoom } from '@/scripts/storage';
 import { useRouter } from 'next/navigation';
 import JoinRoomForm from './JoinRoomForm';
 
 const ListRoom: React.FC = () => {
+
+  useEffect(() =>{
+    handleButtonClick('WAITING')
+  },[]);
+
   const router = useRouter()
   const [rooms, setRooms] = useState<Room[]>([]);
   const [activeButton, setActiveButton] = useState('');
   const [reachedEndOfList, setReachedEndOfList] = useState(false);
 
-
-  useEffect(() => {
-     handleButtonClick('WAITING');
-
-     window.addEventListener('scroll', handleScroll);
-
-     return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
-  }, [])
-
-  const handleScroll = () => {
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollTop = window.scrollY;
-
-    if (windowHeight + scrollTop >= documentHeight - 100) {
-      // User has reached the bottom of the page, load more data
-      if (!reachedEndOfList) {
-        handleLoadMore(activeButton);
-      }
-    }
-  };
-
   const handleLoadMore = async (buttonName: string = 'WAITING') => {
     try {
-      const nextPage = Math.ceil(rooms.length / 5) + 1; // Calculate the next page based on the current number of rooms
-  
-      const response = await fetch(API_URL + `/room?currentState=${buttonName}&page=${nextPage}&pageSize=5`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        }
-      );
-  
-      if (response.ok) {
-        const data: ApiGetRoomResponse = await response.json() as ApiGetRoomResponse;
-  
-        if (data.status.toLowerCase() === "success") {
-          const newRooms = data.data;
-          setRooms(prevRooms => [...prevRooms, ...newRooms]); 
+      const nextPage = Math.ceil(rooms.length / 5) + 1;
 
-          if (newRooms.length < 5) {
-            setReachedEndOfList(true); 
-          }
-        }
-  
-        
-  
-      } else {
-        notify('Get failed, try again!', "error");
-      }
-    } catch (error) {
-      notify('Get failed, try again!', "error");
-    }
-  };
-  
-  const handleButtonClick = async (buttonName: string = 'WAITING') => {
-    try {
-      const response = await fetch(API_URL + '/room?currentState=' + buttonName + '&page=1&pageSize=10', {
+      const response = await fetch(API_URL + `/room?currentState=${buttonName}&page=${nextPage}&pageSize=5`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -86,15 +33,13 @@ const ListRoom: React.FC = () => {
       if (response.ok) {
         const data: ApiGetRoomResponse = await response.json() as ApiGetRoomResponse;
 
-
         if (data.status.toLowerCase() === "success") {
-          console.log(data)
-          setRooms(data.data)
-          setActiveButton(buttonName);
-          setTimeout(function () {
+          const newRooms = data.data;
+          setRooms(prevRooms => [...prevRooms, ...newRooms]);
 
-          }, 3000);
-
+          if (newRooms.length < 5) {
+            setReachedEndOfList(true);
+          }
         }
       } else {
         notify('Get failed, try again!', "error");
@@ -102,7 +47,32 @@ const ListRoom: React.FC = () => {
     } catch (error) {
       notify('Get failed, try again!', "error");
     }
+  };
 
+  const handleButtonClick = async (buttonName: string = 'WAITING') => {
+    setReachedEndOfList(false);
+    try {
+      const response = await fetch(API_URL + '/room?currentState=' + buttonName + '&page=1&pageSize=5', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        const data: ApiGetRoomResponse = await response.json() as ApiGetRoomResponse;
+
+        if (data.status.toLowerCase() === "success") {
+          console.log(data);
+          setRooms(data.data)
+          setActiveButton(buttonName);
+        }
+      } else {
+        notify('Get failed, try again!', "error");
+      }
+    } catch (error) {
+      notify('Get failed, try again!', "error");
+    }
   };
 
   function handleJoinButtonClick(roomId: string) {
@@ -158,32 +128,32 @@ const ListRoom: React.FC = () => {
                       {room?.currentState === RoomStatus.WAITING ? 'Thiếu người' : 'Đang thi đấu'}
                     </Typography>
                     {room.players && room.players.length !== undefined ? ` — ${room.players.length} người chơi` : ` — 0 người chơi`}
-
                   </React.Fragment>
                 }
               />
             </ListItem>
             <Divider variant="inset" component="li" />
             {index === rooms.length - 1 && reachedEndOfList && (
-        <Typography align="center" variant="body2" color="text.secondary">
-          End of List
-        </Typography>
-      )}
+              <Typography align="center" variant="body2" color="text.secondary">
+                Hết
+              </Typography>
+            )}
           </div>
         ))}
         {reachedEndOfList && rooms.length === 0 && (
-        <Typography align="center" variant="body2" color="text.secondary">
-          No Rooms Found
-        </Typography>
-      )}
-      {!reachedEndOfList && (
-        <Typography align="center" variant="body2" color="text.secondary">
-          Loading...
-        </Typography>
-      )}
+          <Typography align="center" variant="body2" color="text.secondary">
+            Không tìm thấy phòng
+          </Typography>
+        )}
       </List>
-
-
+      {!reachedEndOfList && (
+        <button
+          className=" mx-auto my-4 p-2 bg-indigo-60 rounded px-3 py-1.5 text-sm font-semibold leading-6 text-gray-500 border shadow-sm hover:bg-gray-300 "
+          onClick={() => handleLoadMore(activeButton)}
+        >
+          Xem thêm
+        </button>
+      )}
     </div>
   );
 };

@@ -32,7 +32,7 @@ const ModalMain: React.FC<ModalMainProps> = ({ setShowModal }) => {
       }}
     >
       <div>
-        {showMess && <ChatDetail setShowMess={setShowMess} />}
+        
         <ChatIcon className="text-gray-100" />
 
         <span className="ml-2 text-xl font-medium pb-15 text-gray-100">Chat</span>
