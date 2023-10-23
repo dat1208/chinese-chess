@@ -122,12 +122,11 @@ const ChatDetail = ({ socket, username}) => {
                             onClick={() => {
                                 sendMessage();
                             }}
-                            className="ml-2 h-6 w-6"
+                            className="ml-2 h-6 w-6 text-gray-100"
                         />
                     </div>
                 </div>
             </div>
-            {showModal && <ModalMain setShowModal={setShowModal} />}
         </div>
     );
 };
