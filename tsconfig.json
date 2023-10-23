@@ -22,7 +22,7 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/ChessBoard/ChessBoard.jsx"
-  , "src/app/components/ChessBoard/ChessBoard.jsx","environment.d.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/components/ChessBoard/ChessBoard.tsx"
+  , "src/app/components/ChessBoard/ChessBoard.tsx","environment.d.ts", "src/app/components/Chat/ChatDetail.jsx", "src/app/components/Chat/ChatDetail.jsx"],
   "exclude": ["node_modules"]
 }

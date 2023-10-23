@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { Team } from "./interface";
-import { DisplaySenderComponent } from "../Chat/ChatDetail";
+import ChatDetail from "../Chat/ChatDetail";
 import list, { List } from "postcss/lib/list";
 import ChatIcon from '@mui/icons-material/Message';
 import ModalMain from "../ModalMain";
@@ -15,12 +15,6 @@ const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
 var sender = '';
-interface Message {
-  room: string;
-  author: string;
-  message: string;
-  time: string;
-}
 
 // Get room id in this component and user info join to this room.
 const ChessBoard = () => {
@@ -31,25 +25,6 @@ const ChessBoard = () => {
     }
   };
   
-
-  const sendMessage = async () => {
-    if (MessageReceived !== "") {
-      const messageData = {
-        room: room,
-        author: sender,
-        message: MessageReceived,
-        time:
-          new Date(Date.now()).getHours() +
-          ":" +
-          new Date(Date.now()).getMinutes(),
-      };
-      socket.emit(IOChanel.CHAT_CHANEL_SEND, messageData);
-      // setMessageList((list: any) => [...list, messageData]);
-      // console.log('messageData from sendmessage(): ' + JSON.stringify(messageList))
-      // setMessageReceive;
-    }
-  };
-  const [messageList, setMessageList] = useState<Message[]>([]);
   const [nextTurn, setNextTurn] = useState(Team.RED);
   const [team, setTeam] = useState(); // red/black
   const [isPlayer, setIsPlayer] = useState(false);
@@ -64,11 +39,6 @@ const ChessBoard = () => {
   const socket = ioService.reqConnection({ roomId: room as string });
   const [MessageReceived, setMessageReceive] = useState();
 
-  module.exports.ReceiverComponent = function ReceiverComponent(message: any) {
-    setMessageReceive(message);
-    console.log('message: ' + MessageReceived)
-    sendMessage();
-  }
 
   useEffect(() => {
     function addViewerIfNotExists(username: any) {
@@ -77,22 +47,11 @@ const ChessBoard = () => {
         setViewers(newViewers);
       }
     }
-
-    socket.on(IOChanel.CHAT_CHANEL_RECEIVE, (data) => {
-      console.log('data from backend: ' + JSON.stringify(data));
-      messageList.push(data);
-      setMessageList(messageList);
-      console.log('Data receive: '+ JSON.stringify(messageList));
-      setMessageReceive;
-      DisplayMessage(messageList);
-    });
-
     socket.on(IOChanel.JOIN_CHAT, (response: any) => {
       if (response?.metadata?.username) {
         addViewerIfNotExists(response.metadata.username);
       }
       sender= response.metadata.username;
-      DisplaySenderComponent(sender);
     });
 
     socket.on(IOChanel.JOIN_ROOM, (response: any) => {
@@ -187,7 +146,7 @@ const ChessBoard = () => {
         <ChatIcon className="text-gray-100" />
 
       </button>
-    
+      <ChatDetail socket={socket} username={sender} />
       <Script type="module" rel="javascript preload prefetch" src="/js/chess/script.js" />
     </div>
   </>)
