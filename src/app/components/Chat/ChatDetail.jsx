@@ -32,7 +32,7 @@ const ChatDetail = ({ socket, username}) => {
               new Date(Date.now()).getMinutes(),
           };
         //   setCurrentMessage(currentMessage);
-          await socket.emit(IOChanel.CHAT_CHANEL_SEND, messageData);
+        socket.emit(IOChanel.CHAT_CHANEL_SEND, messageData);
           setCurrentMessage('');
         }
     }
