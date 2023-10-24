@@ -62,7 +62,7 @@ const JoinRoomForm: React.FC = () => {
         <input
           type="text"
           className="p-2 border rounded-md"
-          placeholder="Enter Room Code"
+          placeholder="Nhập mã phòng"
           value={roomCode}
           onChange={(e) => setRoomCode(e.target.value)}
         />
@@ -70,13 +70,13 @@ const JoinRoomForm: React.FC = () => {
           className="rounded bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           onClick={handleJoinRoom}
         >
-          JOIN
+          Tham gia
         </button>
         <button
           className="rounded bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           onClick={handleCreateRoom}
         >
-          Create
+          Tạo phòng
         </button>
       </div>
     </div>
