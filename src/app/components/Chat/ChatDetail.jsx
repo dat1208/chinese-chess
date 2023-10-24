@@ -12,10 +12,12 @@ import Message from "@mui/icons-material/Message";
 
 
 const ChatDetail = ({ socket, username }) => {
+  
   const [showModal, setShowModal] = useState(false);
   const [messageList, setMessageList] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [currentMessage, setCurrentMessage] = useState("");
+  const messagesContainerRef = useRef(null);
 
   const searchParams = useSearchParams();
   const room = searchParams.get("room") ?? "";
@@ -39,6 +41,9 @@ const ChatDetail = ({ socket, username }) => {
       const data = localStorage.getItem(key);
       return data ? JSON.parse(data) : null;
     };
+    const scrollToBottom = () => {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    };
     const roomKey = `chatMessages_${room}`;
     useEffect(() => {
       const cachedMessages = getCache(roomKey);
@@ -48,6 +53,7 @@ const ChatDetail = ({ socket, username }) => {
     }, [roomKey]);
 
     useEffect(() => {
+      
       const roomKey = `chatMessages_${room}`;
 
       socket.on(IOChanel.CHAT_CHANEL_RECEIVE, (data) => {
@@ -60,19 +66,23 @@ const ChatDetail = ({ socket, username }) => {
     }, [socket, room]);
     const customScrollbarStyle = {
       overflowY: 'auto',
-      maxHeight: '490px',
+      maxHeight: '400px',
       scrollbarColor: '#f5f5f5',
     };
+    useEffect(() => {
+      scrollToBottom();
+    }, [messageList]);
     return (
       <div
         id="main"
+        ref={messagesContainerRef}
         style={{
           position: "fixed",
           padding: "2.5rem",
           backgroundColor: "#fff",
           width: "330px",
-          height: "600px",
-          top: "30px",
+          height: "500px",
+          bottom: "10px",
           right: "10px",
           borderRadius: "15px",
           boxShadow: "0px 0px 10px rgba(0, 0, 0, 1)",

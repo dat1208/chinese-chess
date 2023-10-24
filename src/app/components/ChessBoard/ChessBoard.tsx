@@ -21,9 +21,7 @@ var sender = '';
 
 // Get room id in this component and user info join to this room.
 const ChessBoard = () => {
-  const [nextTurn, setNextTurn] = useState(Team.RED);
   const [currentTeam, setCurrentTeam] = useState(0); // red/black
-  const [isPlayer, setIsPlayer] = useState(false);
 
   const [viewers, setViewers] = useState<any[]>([]);
   const [players, setPlayers] = useState<any[]>([]);
