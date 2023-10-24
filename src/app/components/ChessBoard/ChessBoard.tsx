@@ -7,27 +7,30 @@ import { Team } from "./interface";
 import ChatIcon from '@mui/icons-material/Message';
 import ChatDetail from "../Chat/ChatDetail";
 import DisplayMessage from '../Chat/ChatDetail'
+import { API_URL , URL} from "@/scripts/config";
+import { getUser } from "@/scripts/storage";
 import User2Player from "../User/User2Player";
 
 
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
+const WINNER_NOTIFICATION = 'WINNER_NOTIFICATION';
+const UPDATE_WINNER_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_WINNER_FROM_SOCKET_CUSTOM_EVENT';
+
 var sender = '';
 
 // Get room id in this component and user info join to this room.
 const ChessBoard = () => {
-  
-  
   const [nextTurn, setNextTurn] = useState(Team.RED);
-  const [team, setTeam] = useState(); // red/black
+  const [currentTeam, setCurrentTeam] = useState(0); // red/black
   const [isPlayer, setIsPlayer] = useState(false);
 
   const [viewers, setViewers] = useState<any[]>([]);
   const [players, setPlayers] = useState<any[]>([]);
   const [showModal, setShowModal] = useState(false)
  
-
+  const user = getUser();
   const searchParams = useSearchParams();
   const room = searchParams.get('room') ?? '';
   const ioService = new SocketIOService();
@@ -41,7 +44,7 @@ const ChessBoard = () => {
 
   useEffect(() => {
     const script = document.createElement('script');
-    script.src = 'http://localhost:3000/js/chess/script.js';
+    script.src = URL+'/js/chess/script.js';
     script.async = true;
 
     document.body.appendChild(script);
@@ -62,62 +65,58 @@ const ChessBoard = () => {
       sender= response.metadata.username;
     });
 
-    socket.on(IOChanel.JOIN_ROOM, (response: any) => {
-      //console.log(response.metadata)
+    socket.on(IOChanel.JOIN_ROOM, async (response: any) => {
       // #region handle policy can access chess board;
-      const canAccessChessBoard: any = {};
-
-      if (response?.team) {
-        setTeam(response?.team);
-        canAccessChessBoard.team = response?.team;
+      var canAccessChessBoard: boolean = false;
+      var team : number =  response?.team as number; // Added a check for response.team
+      setCurrentTeam(team);
+      if(team !== 0){
+        canAccessChessBoard = true;
       }
-
-      if (response?.isPlayer) {
-        setIsPlayer(response?.isPlayer);
-        canAccessChessBoard.isPlayer = response?.isPlayer;
-      }
-
-      const canAccessChessBoardEvent = new CustomEvent(CAN_ACCESS_CHESS_BOARD, { detail: canAccessChessBoard });
+      const canAccessChessBoardEvent = new CustomEvent(CAN_ACCESS_CHESS_BOARD, { detail: {canAccessChessBoard, currentTeam: response} }); // Changed currentTeam to team
       document.dispatchEvent(canAccessChessBoardEvent);
       // #endregion handle policy can access chess board;
-
-      // #region display viewer: 
-      if (response?.metadata?.user && !response?.isPlayer) {
-        viewers.push(response?.metadata?.user);
-        setViewers(viewers);
-      }
-      // #endregion display viewer: 
-
-      // #region display player: 
-      if (response?.metadata?.user && response?.isPlayer) {
-        players.push(response?.metadata?.user);
-        setPlayers(players);
-      }
-      // #endregion display player: 
     });
+    
 
-    socket.emit(IOChanel.JOIN_ROOM);
+    socket.emit(IOChanel.JOIN_ROOM, user);
 
     joinRoom();
     // socket.emit(IOChanel.JOIN_CHAT, room);
-
-    socket.on(IOChanel.GAME_CHANEL, (metadata: any, nextTurnTeam : string, chsIsDead : any) => {
-     console.log('reeive from server', chsIsDead, nextTurnTeam);
+    
+    socket.on(IOChanel.GAME_CHANEL, (metadata: any, nextTurnTeam : number, chsIsDead : any, chsIsCross) => {
       const eventData = {
         detail: {
           board: metadata,
           nextTurnTeam: nextTurnTeam,
-          chsIsDead: chsIsDead
+          chsIsDead: chsIsDead,
+          chsIsCross: chsIsCross
         }
       };
       const updateCheckBoard = new CustomEvent(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, eventData);
       document.dispatchEvent(updateCheckBoard);
     })
 
+    socket.on(IOChanel.GAME_CHANEL_WINNER, (metadata: any) => {
+       const eventData = {
+         detail: {
+           winer: -metadata,     
+         }
+       };
+       const updateWinner = new CustomEvent(UPDATE_WINNER_FROM_SOCKET_CUSTOM_EVENT, eventData);
+       document.dispatchEvent(updateWinner);
+     })
+ 
+
      document.addEventListener(UPDATE_CHESS_BOARD_CUSTOM_EVENT, (event: any) => {
-     socket.emit(IOChanel.GAME_CHANEL, event.detail.board_matrix, event.detail.nextTurn, event.detail.chsIsDead);
+     socket.emit(IOChanel.GAME_CHANEL, event.detail.board_matrix, event.detail.nextTurn, event.detail.chsIsDead, event.detail.chsIsCross);
       // Todo: Work;
     });
+
+    document.addEventListener(WINNER_NOTIFICATION, (event: any) => {
+      socket.emit(IOChanel.GAME_CHANEL_WINNER, event.detail.isWiner);
+       // Todo: Work;
+     });
 
     
     
@@ -142,11 +141,12 @@ const ChessBoard = () => {
         </div>
         Game room: {room}
         <br />
-        Đến lượt: {nextTurn == Team.RED ? "Bên đỏ" : "Bên Xanh"}
+        Đến lượt: {nextTurn == 1 ? 'Bên đỏ' : 'Bên Xanh'}
         <br />
-        Bên của bạn là: {team == Team.RED ? "Bên đỏ" : "Bên Xanh"}
+        Bên của bạn là: {currentTeam == 1 ? 'Bên đỏ' : 'Bên Xanh'}
+
         <br />
-        Bạn là người : {isPlayer == true ? "Chơi" : "Xem"}
+        Bạn là người : {currentTeam == 0 ? 'Xem' : 'Chơi'}
         <br />
         Lũ đang xem là:
         <ul>{viewers[0]?.displayName}</ul>
