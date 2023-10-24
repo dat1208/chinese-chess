@@ -2,13 +2,15 @@
 var chsArr = null;
 var chsIsDead = [];
 var chsIsCross = [];
-
+var isCheckNum1 = false;
 //  #region event handler
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
-const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
-
+const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT'; 
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
-let canAccessChessBoard = false;
+const WINNER_NOTIFICATION = 'WINNER_NOTIFICATION';
+const UPDATE_WINNER_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_WINNER_FROM_SOCKET_CUSTOM_EVENT';
+let canAccessChessBoard = null;
+let isWiner = null;
 let currentTeam = -1;
 // Recieve from socket up update check board;
 document.addEventListener(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, (event) => {
@@ -27,17 +29,25 @@ document.addEventListener(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, (event) =
   chsIsDead = chsIsDeadUpdate;
   updateChessboard(board);
   nextTurn(nextSide);
-  console.log('Received update:');
-  console.log(side);
 
   isCheck(side, chsArr)
 })
 
 // Event can access chess board
 document.addEventListener(CAN_ACCESS_CHESS_BOARD, (event) => {
-  canAccessChessBoard = event?.detail.isPlayer;
-  currentTeam = event?.detail.team;
+  canAccessChessBoard = event?.detail.canAccessChessBoard;
+  
+  currentTeam = event?.detail.currentTeam.team;
 })
+// Event winner
+document.addEventListener(UPDATE_WINNER_FROM_SOCKET_CUSTOM_EVENT, (event) => {
+  let Winer  = event?.detail.winer;
+  let winner = Winer == 1 ? 'RED' : 'GREEN';
+  alert('Winner is: '+ winner);
+  isWiner = Winer;
+  
+})
+
 
 var moveHistory = [];
 /// Draw the chessboard
@@ -131,23 +141,28 @@ var round = Math.round
 var chss = chs.querySelectorAll('.ch')
 nextTurn()
 
-document.addEventListener('mousedown', function (e) {
+document.addEventListener('mousedown',async function (e) {
   e = e.originalEvent || e
   // if (side < 0) {
   if (e.target.classList.contains('ch') &&
     e.target.classList.contains(side > 0 ? 'red' : 'green')) {
 
     // lock when user cant not acces check board == viewer
-    // if (!canAccessChessBoard) {
-    //   alert(`Bạn chỉ là con người bình thường làm sao mà bấm được vào bàn cờ`)
-    //   return;
-    // }
+    if (!canAccessChessBoard) {
+      alert(`Bạn là người xem thôi.`)
+      return;
+    }
 
-    // // Nếu bạn bên đỏ thì không được move cờ bên đen và ngược lại
-    // if (currentTeam !== side) {
-    //   alert(`Chơi ăn gian - không được đụng vào cờ của đối thủ`);
-    //   return;
-    // }
+    if (isWiner) {
+      alert(`Game kết thúc gòi`);
+      return;
+    }
+
+    //Nếu bạn bên đỏ thì không được move cờ bên đen và ngược lại
+    if (currentTeam !== side) {
+      alert(`Không phải lượt của bạn`);
+      return;
+    }
 
     // lock when user cant not acces check board == viewer
 
@@ -158,6 +173,7 @@ document.addEventListener('mousedown', function (e) {
     pick[side] = +e.target.getAttribute('i')
     return
   }
+
   if (pick[side] != null) {
     var x = de(e.pageX - bg.offsetLeft)
     var y = de(e.pageY - bg.offsetTop)
@@ -167,9 +183,11 @@ document.addEventListener('mousedown', function (e) {
       abs(round(y) - y) > 0.4) return
     x = round(x)
     y = round(y)
-    var c = chsArr[pick[side]]
+    var c = chsArr[pick[side]]    
+    var isChecked = false;
 
-    if (!canGo(c, x, y)) return
+    if (!canGo(c, x, y)) return;
+  
     chsArr.forEach(function (c, i) {
       if (!c.dead && c[2] === y && c[3] === x) {
 
@@ -179,14 +197,22 @@ document.addEventListener('mousedown', function (e) {
         chss[i].style.display = 'none'
       }
     })
-    // update board state
-    recordMove(c, c[3], c[2], x, y, i);
-
-    if (isMoveCausingCheck(side, c[3], c[2], x, y)) {
-      console.log("Nước đi này gây chiếu tướng!");
-    } else {
-      console.log("Nước đi này không gây chiếu tướng.");
+    if(isCheckNum1){
+      isChecked = await isMoveCausingCheck(side, c[3], c[2], x, y);
+      if(isChecked) 
+      {
+        isWiner = side;
+        const winnerNotification = new CustomEvent(WINNER_NOTIFICATION, {
+          detail: {
+            isWiner: isWiner
+          }
+        });
+        document.dispatchEvent(winnerNotification);
+      } 
     }
+    
+    // update board state
+    //recordMove(c, c[3], c[2], x, y, i);
     
     
     var ch = chss[pick[side]]
@@ -228,6 +254,7 @@ function canGo(c, x, y) {
   // })) return false
   let dx = x - c[3]
   let dy = y - c[2]
+  
 
   if (c[1] === '兵' || c[1] === '卒') {
     if (c.cross && dy === 0 && abs(dx) === 1) return true
@@ -333,16 +360,15 @@ function findPieceCoordinatesByName(name) {
   return null; // Trả về null nếu không tìm thấy
 }
 
-function isCheck(phe, board) {
+async function isCheck(phe, board) {
   var kingPos = findPieceCoordinatesByName(phe === 1 ? '帅' : '将', board); // Tìm tướng của phe
-  console.log('-----------------------------------isCheck--------------------------------------')
-  console.log(kingPos);
   for (var i = 0; i < board.length; i++) {
       var pieceInfo = board[i];
       if (pieceInfo[0] === -phe) {
           var isValidAttack = canGo(pieceInfo, kingPos[3], kingPos[2]);
           if (isValidAttack) {
               console.log(`Tướng của phe ${phe} bị chiếu!`);
+              isCheckNum1 = true;
               return true;
           }
       }
@@ -350,21 +376,18 @@ function isCheck(phe, board) {
   return false;
 }
 
-function isMoveCausingCheck(side, fromX, fromY, toX, toY) {
-  // Bước 1: Tạo bản sao tạm thời
-  var tempChsArr = chsArr.slice(); // Tạo bản sao của chsArr
+//Check thua do đi sai nước
 
-  // Bước 2: Thực hiện nước đi của bạn
+async function isMoveCausingCheck(side, fromX, fromY, toX, toY) {
+  
+  var tempChsArr = chsArr.slice(); // Tạo bản sao của chsArr
+  
   var pieceToMove = tempChsArr.find(piece => piece[2] === fromY && piece[3] === fromX);
   pieceToMove[2] = toY;
   pieceToMove[3] = toX;
+  var isCheckAfterMove = await isCheck(side, tempChsArr); 
 
-  // Bước 3: Kiểm tra xem nước đi này có gây chiếu tướng không
-  var isCheckAfterMove = isCheck(side, tempChsArr); // Kiểm tra chiếu tướng cho phe đang đi
-
-  // Bước 4: Khôi phục trạng thái ban đầu
-  tempChsArr = chsArr.slice(); // Khôi phục trạng thái ban đầu của chsArr
-
+  tempChsArr = chsArr.slice(); 
   return isCheckAfterMove;
 }
 
@@ -378,7 +401,6 @@ function recordMove(c, fromX, fromY, toX, toY, id) {
     id: id            // Thêm ID của quân cờ
   };
   moveHistory.push(move);
-  console.log(moveHistory);
 
 // Gọi sự kiện di chuyển quân cờ có ID là 0 đến tọa độ (200, 200)
 }
