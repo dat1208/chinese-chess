@@ -82,12 +82,13 @@ const ChessBoard = () => {
 
     socket.emit(IOChanel.JOIN_ROOM, user);
 
-    socket.on(IOChanel.GAME_CHANEL, (metadata: any, nextTurnTeam : string, chsIsDead : any) => {
+    socket.on(IOChanel.GAME_CHANEL, (metadata: any, nextTurnTeam : number, chsIsDead : any, chsIsCross) => {
       const eventData = {
         detail: {
           board: metadata,
           nextTurnTeam: nextTurnTeam,
-          chsIsDead: chsIsDead
+          chsIsDead: chsIsDead,
+          chsIsCross: chsIsCross
         }
       };
       const updateCheckBoard = new CustomEvent(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, eventData);
@@ -106,7 +107,7 @@ const ChessBoard = () => {
  
 
      document.addEventListener(UPDATE_CHESS_BOARD_CUSTOM_EVENT, (event: any) => {
-     socket.emit(IOChanel.GAME_CHANEL, event.detail.board_matrix, event.detail.nextTurn, event.detail.chsIsDead);
+     socket.emit(IOChanel.GAME_CHANEL, event.detail.board_matrix, event.detail.nextTurn, event.detail.chsIsDead, event.detail.chsIsCross);
       // Todo: Work;
     });
 

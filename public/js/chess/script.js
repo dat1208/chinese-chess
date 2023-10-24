@@ -17,7 +17,7 @@ document.addEventListener(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, (event) =
   const board = event?.detail.board;
   const nextSide = event?.detail?.nextTurnTeam;
   const chsIsDeadUpdate = event?.detail?.chsIsDead;
-
+  const chsIsCrossUpdate = event?.detail?.chsIsCross;
   chsArr = board;
   
   var chssTemp = document.querySelectorAll('.ch');
@@ -27,6 +27,7 @@ document.addEventListener(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, (event) =
   });
 
   chsIsDead = chsIsDeadUpdate;
+  chsIsCross = chsIsCrossUpdate;
   updateChessboard(board);
   nextTurn(nextSide);
 
@@ -411,7 +412,8 @@ function updateChsArr(chsArr, chsIsDead) {
     detail: {
       board_matrix: chsArr,
       nextTurn: nextTurn(),
-      chsIsDead: chsIsDead
+      chsIsDead: chsIsDead,
+      chsIsCross: chsIsCross
     }
   });
   document.dispatchEvent(updateBoardCustomEvent);

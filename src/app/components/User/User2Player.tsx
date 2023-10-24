@@ -50,7 +50,8 @@ export default function User2Player({ children }: User2PlayerProps) {
         <div className="user-details">
           <div className="avatar">
             <img
-              src="src/app/components/User/avatar/Avatar2.png"
+              width={60}
+              src="https://inkythuatso.com/uploads/thumbnails/800/2022/03/4a7f73035bb4743ee57c0e351b3c8bed-29-13-53-17.jpg"
               alt="Avatar 1"
             />
           </div>
@@ -77,8 +78,9 @@ export default function User2Player({ children }: User2PlayerProps) {
           <div className="user-details">
             <div className="avatar">
               <img
-                src="src/app/components/User/avatar/Avatar2.png"
-                alt="Avatar 2"
+                 width={60}
+                 src="https://inkythuatso.com/uploads/thumbnails/800/2022/03/4a7f73035bb4743ee57c0e351b3c8bed-29-13-53-17.jpg"
+                 alt="Avatar 2"
               />
             </div>
             <div className="text-info">
@@ -100,8 +102,9 @@ export default function User2Player({ children }: User2PlayerProps) {
           <div className="user-details">
             <div className="avatar">
               <img
-                src="src/app/components/User/avatar/Avatar2.png"
-                alt="Avatar 2"
+                 width={60}
+                 src="https://inkythuatso.com/uploads/thumbnails/800/2022/03/4a7f73035bb4743ee57c0e351b3c8bed-29-13-53-17.jpg"
+                 alt="Avatar 2"
               />
             </div>
             <div className="text-info">
