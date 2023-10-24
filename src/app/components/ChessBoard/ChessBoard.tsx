@@ -5,13 +5,8 @@ import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { Team } from "./interface";
 import ChatIcon from '@mui/icons-material/Message';
-import ModalMain from "../ModalMain";
-
-import list, { List } from "postcss/lib/list";
 import ChatDetail from "../Chat/ChatDetail";
-import DisplayMessage from '../Chat/ChatDetail'
 
-var MessageReceived = '';
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
@@ -158,7 +153,7 @@ const ChessBoard = () => {
         <ChatIcon className="text-gray-100" />
 
       </button>
-      
+      <ChatDetail socket={socket} username={sender}/>
     </div>
   </>)
 }
