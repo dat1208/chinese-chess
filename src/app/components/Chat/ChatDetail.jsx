@@ -48,7 +48,6 @@ const ChatDetail = ({ socket, username }) => {
     }, [roomKey]);
 
     useEffect(() => {
-      // Define roomKey before using it
       const roomKey = `chatMessages_${room}`;
 
       socket.on(IOChanel.CHAT_CHANEL_RECEIVE, (data) => {

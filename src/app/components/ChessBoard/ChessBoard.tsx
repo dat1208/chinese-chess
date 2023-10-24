@@ -17,12 +17,7 @@ var sender = '';
 
 // Get room id in this component and user info join to this room.
 const ChessBoard = () => {
-  const joinRoom = () => {
-    if (room !== "") {
-      console.log('start emit join chat')
-      socket.emit(IOChanel.JOIN_CHAT, room);
-    }
-  };
+  
   
   const [nextTurn, setNextTurn] = useState(Team.RED);
   const [team, setTeam] = useState(); // red/black
@@ -37,7 +32,12 @@ const ChessBoard = () => {
   const room = searchParams.get('room') ?? '';
   const ioService = new SocketIOService();
   const socket = ioService.reqConnection({ roomId: room as string });
-
+  const joinRoom = () => {
+    if (room !== "") {
+      console.log('start emit join chat')
+      socket.emit(IOChanel.JOIN_CHAT, room);
+    }
+  };
 
   useEffect(() => {
     const script = document.createElement('script');
@@ -98,6 +98,9 @@ const ChessBoard = () => {
 
     socket.emit(IOChanel.JOIN_ROOM);
 
+    joinRoom();
+    // socket.emit(IOChanel.JOIN_CHAT, room);
+
     socket.on(IOChanel.GAME_CHANEL, (metadata: any, nextTurnTeam : string, chsIsDead : any) => {
      console.log('reeive from server', chsIsDead, nextTurnTeam);
       const eventData = {
@@ -121,7 +124,7 @@ const ChessBoard = () => {
     return () => {
       document.body.removeChild(script);
     }
-  }, []);
+    }, []);
   return (
     <>
       <link
@@ -147,18 +150,21 @@ const ChessBoard = () => {
         <br />
         Lũ đang xem là:
         <ul>{viewers[0]?.displayName}</ul>
-        {showModal && <ChatDetail socket={socket} username={sender} />}
+        {/* {showModal && <ChatDetail socket={socket} username={sender}/>}  */}
         Đứa đang chơi là là:
         <ul>{players[0]?.displayName}</ul>
-        <button
+        {/* <button
           onClick={() => {
-            showModal ? setShowModal(false) : setShowModal(true);
+            // showModal ? setShowModal(false) : setShowModal(true);
             joinRoom();
           }}
           className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
         >
+          </button> */}
           <ChatIcon className="text-gray-100" />
-        </button>
+        
+
+        <ChatDetail socket={socket} username={sender} />
       </div>
     </>
   );
