@@ -6,6 +6,9 @@ import React, { useEffect, useState } from "react";
 import { Team } from "./interface";
 import ChatIcon from '@mui/icons-material/Message';
 import ChatDetail from "../Chat/ChatDetail";
+import DisplayMessage from '../Chat/ChatDetail'
+import User2Player from "../User/User2Player";
+
 
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
@@ -114,48 +117,51 @@ const ChessBoard = () => {
     });
 
     
+    
     return () => {
       document.body.removeChild(script);
     }
   }, []);
-  return (<>
-    <link rel="stylesheet" type="text/css" href="./css/chess/styles.module.css"></link>
-    <div className="app">
-      <div className="cont-wrap">
-        <div className="cont">
-          <div className="chs"></div>
-          <div className="bg"></div>
+  return (
+    <>
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="./css/chess/styles.module.css"
+      ></link>
+      <div className="app">
+        <User2Player>{players[0]?.displayName}</User2Player>
+        <div className="cont-wrap">
+          <div className="cont">
+            <div className="chs"></div>
+            <div className="bg"></div>
+          </div>
         </div>
+        Game room: {room}
+        <br />
+        Đến lượt: {nextTurn == Team.RED ? "Bên đỏ" : "Bên Xanh"}
+        <br />
+        Bên của bạn là: {team == Team.RED ? "Bên đỏ" : "Bên Xanh"}
+        <br />
+        Bạn là người : {isPlayer == true ? "Chơi" : "Xem"}
+        <br />
+        Lũ đang xem là:
+        <ul>{viewers[0]?.displayName}</ul>
+        {showModal && <ChatDetail socket={socket} username={sender} />}
+        Đứa đang chơi là là:
+        <ul>{players[0]?.displayName}</ul>
+        <button
+          onClick={() => {
+            showModal ? setShowModal(false) : setShowModal(true);
+            joinRoom();
+          }}
+          className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
+        >
+          <ChatIcon className="text-gray-100" />
+        </button>
       </div>
-      Game room: {room}
-      <br />
-      Đến lượt: {nextTurn == Team.RED ? 'Bên đỏ' : 'Bên Xanh'}
-      <br />
-      Bên của bạn là: {team == Team.RED ? 'Bên đỏ' : 'Bên Xanh'}
-
-      <br />
-      Bạn là người : {isPlayer == true ? 'Chơi' : 'Xem'}
-      <br />
-
-      Lũ đang xem là:
-      <ul>
-        {viewers[0]?.displayName}
-      </ul>
-      {showModal && <ChatDetail socket={socket} username={sender}/>}
-      Đứa đang chơi là là:
-      <ul>
-        {players[0]?.displayName}
-      </ul>
-      <button
-        onClick={() => {showModal ? setShowModal(false) : setShowModal(true); joinRoom();}}
-        className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
-      >
-        <ChatIcon className="text-gray-100" />
-
-      </button>
-      <ChatDetail socket={socket} username={sender}/>
-    </div>
-  </>)
+    </>
+  );
 }
 
 export default ChessBoard;

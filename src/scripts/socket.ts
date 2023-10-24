@@ -1,6 +1,7 @@
 import io, { Socket } from "socket.io-client";
 import { SOCKET_URL } from "./config";
 
+
 export enum IOChanel {
   MAIN_CONNECTION = "connection",
   DISCONECTION_CHANEL = 'disconnect',
@@ -12,7 +13,8 @@ export enum IOChanel {
   VIEWER_CHANEL = "VIEWER_CHANEL",
   CHAT_CHANEL = "CHAT_CHANEL",
   CHAT_CHANEL_RECEIVE = "CHAT_CHANEL_RECEIVE",
-  CHAT_CHANEL_SEND = "CHAT_CHANEL_SEND"
+  CHAT_CHANEL_SEND = "CHAT_CHANEL_SEND",
+  GET_PLAYER_INFO = "GET_PLAYER_INFO"
 }
 
 export class SocketIOService {
