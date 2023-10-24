@@ -40,23 +40,27 @@ const ChatDetail = ({ socket, username}) => {
             const data = localStorage.getItem(key);
             return data ? JSON.parse(data) : null;
         };
-
+        const roomKey = `chatMessages_${room}`;
         useEffect(() => {
-            const cachedMessages = getCache("chatMessages");
+            const cachedMessages = getCache(roomKey);
             if (cachedMessages) {
               setMessageList(cachedMessages);
             }
-          }, []);
-
-    useEffect(()=>{   
-        socket.on(IOChanel.CHAT_CHANEL_RECEIVE, (data) => {
-            setMessageList((list) => {
-            const updatedList = [...list, data];
-            localStorage.setItem("chatMessages", JSON.stringify(updatedList));
-            return updatedList;
+          }, [roomKey]);
+          
+          useEffect(() => {
+            // Define roomKey before using it
+            const roomKey = `chatMessages_${room}`;
+          
+            socket.on(IOChanel.CHAT_CHANEL_RECEIVE, (data) => {
+              setMessageList((list) => {
+                const updatedList = [...list, data];
+                localStorage.setItem(roomKey, JSON.stringify(updatedList));
+                return updatedList;
+              });
             });
-        });     
-    }, [socket])
+          }, [socket, room]);
+          
     return (
         <div
             className='fixed p-10 bg-indigo-800'
