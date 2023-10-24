@@ -1,0 +1,38 @@
+/* User2Player.css */
+
+.user2player-container {
+  display: flex;
+}
+
+.player-info {
+  width: 50%;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.user-details {
+  border: 1px solid #ccc;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
+.status-and-time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status {
+  color: gray;
+}
+
+.gray-text {
+  color: gray;
+}
+.spacer {
+  width: 16px; /* Adjust the width as needed */
+}

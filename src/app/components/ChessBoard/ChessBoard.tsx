@@ -5,15 +5,13 @@ import Script from "next/script";
 import React, { useEffect, useState } from "react";
 import { Team } from "./interface";
 import ChatIcon from '@mui/icons-material/Message';
-import ModalMain from "../ModalMain";
-
-import list, { List } from "postcss/lib/list";
 import ChatDetail from "../Chat/ChatDetail";
 import DisplayMessage from '../Chat/ChatDetail'
 import { API_URL , URL} from "@/scripts/config";
 import { getUser } from "@/scripts/storage";
+import User2Player from "../User/User2Player";
 
-var MessageReceived = '';
+
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
@@ -118,39 +116,46 @@ const ChessBoard = () => {
      });
 
     
+    
     return () => {
       document.body.removeChild(script);
     }
   }, []);
-  return (<>
-    <link rel="stylesheet" type="text/css" href="./css/chess/styles.module.css"></link>
-    <div className="app">
-      <div className="cont-wrap">
-        <div className="cont">
-          <div className="chs"></div>
-          <div className="bg"></div>
+  return (
+    <>
+      <link
+        rel="stylesheet"
+        type="text/css"
+        href="./css/chess/styles.module.css"
+      ></link>
+      <div className="app">
+        <User2Player>{players[0]?.displayName}</User2Player>
+        <div className="cont-wrap">
+          <div className="cont">
+            <div className="chs"></div>
+            <div className="bg"></div>
+          </div>
         </div>
-      </div>
-      Game room: {room}
-      <br />
-      Đến lượt: {nextTurn == 1 ? 'Bên đỏ' : 'Bên Xanh'}
-      <br />
-      Bên của bạn là: {currentTeam == 1 ? 'Bên đỏ' : 'Bên Xanh'}
+        Game room: {room}
+        <br />
+        Đến lượt: {nextTurn == 1 ? 'Bên đỏ' : 'Bên Xanh'}
+        <br />
+        Bên của bạn là: {currentTeam == 1 ? 'Bên đỏ' : 'Bên Xanh'}
 
-      <br />
-      Bạn là người : {currentTeam == 0 ? 'Xem' : 'Chơi'}
-      <br />
-
-      <button
+        <br />
+        Bạn là người : {currentTeam == 0 ? 'Xem' : 'Chơi'}
+        <br />
+        <button
         onClick={() => {showModal ? setShowModal(false) : setShowModal(true); joinRoom();}}
         className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
       >
         <ChatIcon className="text-gray-100" />
 
       </button>
-      
     </div>
-  </>)
+      
+    </>
+  );
 }
 
 export default ChessBoard;
