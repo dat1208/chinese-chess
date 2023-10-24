@@ -18,6 +18,16 @@ export const getTokens = (): Tokens | null => {
 
   return null;
 };
+
+export const getAccessTokens = (): string | null => {
+  const accessToken = localStorage.getItem('accessToken');
+
+  if (accessToken ) {
+    return accessToken;
+  }
+
+  return null;
+};
   
 //-----------------------------------------------USER------------------------------------------------//
 
