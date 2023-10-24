@@ -1,7 +1,7 @@
 // components/Loading.tsx
 import React from 'react';
 import Lottie from "lottie-react";
-import loadingAnimation from "../json/loadingAnimation.json";
+import loadingAnimation from "../../json/loadingAnimation.json";
 
 
 const Loading: React.FC = () => {
