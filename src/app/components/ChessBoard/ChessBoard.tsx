@@ -11,7 +11,6 @@ import { API_URL , URL} from "@/scripts/config";
 import { getUser } from "@/scripts/storage";
 import User2Player from "../User/User2Player";
 
-
 const UPDATE_CHESS_BOARD_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_CUSTOM_EVENT';
 const UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT = 'UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT';
 const CAN_ACCESS_CHESS_BOARD = 'CAN_ACCESS_CHESS_BOARD';
@@ -132,6 +131,9 @@ const ChessBoard = () => {
         href="./css/chess/styles.module.css"
       ></link>
       <div className="app">
+        <div className="game-room-bar">
+          <p>Game Room: {room}</p>
+        </div>
         <User2Player>{players[0]?.displayName}</User2Player>
         <div className="cont-wrap">
           <div className="cont">
@@ -139,7 +141,7 @@ const ChessBoard = () => {
             <div className="bg"></div>
           </div>
         </div>
-        Game room: {room}
+        {/* Game room: {room}
         <br />
         Đến lượt: {nextTurn == 1 ? 'Bên đỏ' : 'Bên Xanh'}
         <br />
@@ -149,10 +151,11 @@ const ChessBoard = () => {
         Bạn là người : {currentTeam == 0 ? 'Xem' : 'Chơi'}
         <br />
         Lũ đang xem là:
-        <ul>{viewers[0]?.displayName}</ul>
+        <ul>{viewers[0]?.displayName}</ul> */}
         {/* {showModal && <ChatDetail socket={socket} username={sender}/>}  */}
-        Đứa đang chơi là là:
-        <ul>{players[0]?.displayName}</ul>
+        {/* Đứa đang chơi là là:
+        <ul>{players[0]?.displayName}</ul> */}
+
         {/* <button
           onClick={() => {
             // showModal ? setShowModal(false) : setShowModal(true);
@@ -161,8 +164,7 @@ const ChessBoard = () => {
           className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
         >
           </button> */}
-          <ChatIcon className="text-gray-100" />
-        
+        <ChatIcon className="text-gray-100" />
 
         <ChatDetail socket={socket} username={sender} />
       </div>

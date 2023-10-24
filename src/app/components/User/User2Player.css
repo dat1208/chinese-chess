@@ -36,3 +36,10 @@
 .spacer {
   width: 16px; /* Adjust the width as needed */
 }
+.game-room-bar {
+  background-color: #3730a3; /* Blue color */
+  color: #fff; /* White text color */
+  padding: 10px;
+  text-align: center;
+  font-weight: bold;
+}
