@@ -2,10 +2,11 @@
 import { Button } from '@mui/material';
 import Image from 'next/image'
 import * as React from 'react';
-import { getUser, setUser } from '@/scripts/storage';
+import { getTokens, getUser, setUser } from '@/scripts/storage';
 import { User } from '@/interfaces/userInterface';
 import Avatar from '@mui/material/Avatar';
 import { blue } from '@mui/material/colors';
+import { API_URL } from '@/scripts/config';
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState(
   {  _id: '',
@@ -33,8 +34,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const apiUrl = API_URL+'/user';
+    const accessToken = getTokens()?.accessToken || '';
 
-    console.log(user);
+    const data = {
+      fullname: user.fullname,
+      avatar: 'https://inkythuatso.com/uploads/thumbnails/800/2022/03/4a7f73035bb4743ee57c0e351b3c8bed-29-13-53-17.jpg',
+      email: user.email
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': accessToken
+        },
+        body: JSON.stringify(data)
+      });
+  
+      if (response.ok) {
+        console.log(response);
+        // Additional logic after successful update goes here
+      } else {
+        console.error('Error updating user');
+        // Handle error scenario
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      // Handle network or other errors
+    }
   };
   
   return (
