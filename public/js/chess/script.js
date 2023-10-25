@@ -37,6 +37,9 @@ document.addEventListener(UPDATE_CHESS_BOARD_FROM_SOCKET_CUSTOM_EVENT, (event) =
 // Event can access chess board
 document.addEventListener(CAN_ACCESS_CHESS_BOARD, (event) => {
   canAccessChessBoard = event?.detail.canAccessChessBoard;
+  console.log('--------------------------------------CAN_ACCESS_CHESS_BOARD----------------------------------------')
+  console.log(canAccessChessBoard);
+  console.log(currentTeam);
   
   currentTeam = event?.detail.currentTeam.team;
 })

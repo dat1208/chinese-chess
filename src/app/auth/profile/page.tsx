@@ -4,11 +4,13 @@ import Image from 'next/image'
 import * as React from 'react';
 import { ApiEditUserResponse } from '@/interfaces/userInterface';
 import { getAccessTokens, getTokens, getUser, setUser as setUserLocal} from '@/scripts/storage';
+
 import { User } from '@/interfaces/userInterface';
 import Avatar from '@mui/material/Avatar';
 import { blue } from '@mui/material/colors';
 import { API_URL } from '@/scripts/config';
 import { notify } from '../../../scripts/notification';
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const [user, setUser] = React.useState(
     {
@@ -75,6 +77,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     handleEditUser(user);
+
   };
 
 
