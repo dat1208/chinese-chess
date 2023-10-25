@@ -153,11 +153,11 @@ const ChessBoard = () => {
         {/* {showModal && <ChatDetail socket={socket} username={sender}/>}  */}
         {/* Đứa đang chơi là là:
         <ul>{players[0]?.displayName}</ul> */}
-
-        {/* <button
+{/* 
+        <button
           onClick={() => {
-            // showModal ? setShowModal(false) : setShowModal(true);
-            joinRoom();
+            showModal ? setShowModal(false) : setShowModal(true);
+            // joinRoom();
           }}
           className="fixed bottom-0 right-0 p-4 m-4 bg-indigo-600 rounded-full text-white hover-bg-indigo-700"
         >

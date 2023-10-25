@@ -20,6 +20,14 @@ interface UserResponse{
     
 }
 
+interface EditUserResponse{
+  _id: string,
+  username: string,
+  fullname: string,
+  email: string,
+  password: string
+}
+
 interface RegisterUserResponse{
   username: string;
   password: string;
@@ -29,7 +37,11 @@ interface RegisterUserResponse{
 
 interface ApiUserResponse extends ApiResponse {
     data: UserResponse;
-  }
+}
+
+interface ApiEditUserResponse extends ApiResponse {
+    data: EditUserResponse;
+}
 
 interface ApiRegisterUserResponse extends ApiResponse {
     data: RegisterUserResponse;
@@ -38,4 +50,4 @@ interface ApiRegisterUserResponse extends ApiResponse {
 
 
 
-export type { ApiUserResponse, User, ApiRegisterUserResponse };
+export type { ApiUserResponse, User, ApiRegisterUserResponse , ApiEditUserResponse};
